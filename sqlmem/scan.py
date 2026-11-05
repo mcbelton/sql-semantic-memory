@@ -727,7 +727,7 @@ def scan_database(engine: Engine, opts: ScanOptions, log: Callable[[str], None] 
     objects.sort(key=lambda o: o["fqn"].lower())
     return {
         "version": CATALOG_VERSION,
-        "generated_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
+        "generated_at": dt.datetime.now(dt.UTC).isoformat(timespec="seconds"),
         "source": source,
         "options": asdict(opts),
         "objects": objects,

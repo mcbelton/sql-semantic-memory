@@ -237,30 +237,41 @@ test("every HTTP read revalidates the artifact, including HEAD and download", as
   assert.equal((await request(viewer.url)).status, 410);
 });
 
-test("viewer caps active requests at eight and closes open sockets", async (t) => {
+test("viewer caps active requests at eight and destroys active sockets on close", async (t) => {
   const f = await fixture(t);
   const artifact = await readArtifact(f.input);
   let release;
-  const gate = new Promise((resolve) => { release = resolve; });
+  let gate = new Promise((resolve) => { release = resolve; });
   let calls = 0;
   const viewer = await createViewer(f.input, { read: async () => {
     calls += 1;
     if (calls > 1) await gate;
     return artifact;
   } });
-  t.after(() => viewer.close());
+  t.after(() => { release(); return viewer.close(); });
   const pending = Array.from({ length: 8 }, () => request(viewer.url));
   for (let i = 0; i < 100 && calls < 9; i += 1) await delay(5);
   assert.equal(calls, 9);
   assert.equal((await request(viewer.url)).status, 503);
   release();
   assert.ok((await Promise.all(pending)).every((result) => result.status === 200));
+  gate = new Promise((resolve) => { release = resolve; });
   const target = new URL(viewer.url);
   const socket = net.createConnection({ host: target.hostname, port: Number(target.port) });
+  const socketErrors = [];
+  socket.on("error", (error) => socketErrors.push(error.code));
   await new Promise((resolve) => socket.once("connect", resolve));
   const disconnected = new Promise((resolve) => socket.once("close", resolve));
-  await viewer.close();
-  await disconnected;
+  socket.write(`GET / HTTP/1.1\r\nHost: ${target.host}\r\n\r\n`);
+  for (let i = 0; i < 100 && calls < 10; i += 1) await delay(5);
+  assert.equal(calls, 10);
+  // Only the viewer's socket destruction can end this held request before the 5 s socket timeout.
+  const closing = viewer.close();
+  const outcome = await Promise.race([disconnected.then(() => "closed"), delay(1000).then(() => "timeout")]);
+  assert.equal(outcome, "closed");
+  // macOS may report the forced close as a reset; any other client error is unexpected.
+  assert.ok(socketErrors.every((code) => code === "ECONNRESET"), `unexpected socket errors: ${socketErrors}`);
+  await closing;
   assert.equal(viewer.closed, true);
   await viewer.close();
 });

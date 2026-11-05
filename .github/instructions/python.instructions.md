@@ -4,9 +4,10 @@ applyTo: "**/*.py"
 ---
 # Python code in sqlmem
 
-- Target Python 3.10+. Every function in `sqlmem/` is fully annotated and passes `mypy --strict` and pyright
-  (`standard`) with zero findings. Prefer precise types (`dict[str, Any]` at JSON/YAML boundaries only) and narrow
-  `Optional` values explicitly instead of `# type: ignore` (an unnecessary ignore is an error).
+- Target Python 3.11+ (tested on 3.11–3.15). Every function in `sqlmem/` is fully annotated and passes
+  `mypy --strict` and pyright (`standard`) with zero findings. Prefer precise types (`dict[str, Any]` at JSON/YAML
+  boundaries only) and narrow `Optional` values explicitly instead of `# type: ignore` (an unnecessary ignore is an
+  error).
 - Ruff decides formatting and import order (`ruff format`, line length 120). Don't hand-format.
 - **SQL safety**: run every SQL text that comes from users, LLMs or YAML through `db.check_readonly(sql, dialect)`
   and execute it with `db.run_select` (row cap, rollback, time limit). Never build SQL by concatenating values; quote

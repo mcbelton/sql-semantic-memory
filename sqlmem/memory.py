@@ -76,7 +76,7 @@ class MemoryStore:
         mem["tables"] = list(dict.fromkeys(tables or []))
         if tags:
             mem["tags"] = list(dict.fromkeys(tags))
-        mem["created_at"] = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
+        mem["created_at"] = dt.datetime.now(dt.UTC).isoformat(timespec="seconds")
         mem["source"] = source
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with self.path.open("a", encoding="utf-8") as f:

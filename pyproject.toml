@@ -9,7 +9,15 @@ description = "Semantic knowledge + long-term memory for an entire SQL database,
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
+]
 dependencies = [
   "SQLAlchemy>=2.0",
   "PyYAML>=6.0",
@@ -70,7 +78,7 @@ skip_covered = true
 # ----------------------------------------------------------------------------------------------- lint + format
 [tool.ruff]
 line-length = 120
-target-version = "py310"
+target-version = "py311"
 extend-exclude = ["kb", "build"]
 
 [tool.ruff.lint]
@@ -79,7 +87,7 @@ select = [
   "F",        # pyflakes
   "I",        # import sorting
   "B",        # bugbear
-  "UP",       # pyupgrade (py310+)
+  "UP",       # pyupgrade (py311+)
   "SIM",      # simplify
   "C4",       # comprehensions
   "PIE",      # misc lints
@@ -94,7 +102,7 @@ known-first-party = ["sqlmem"]
 
 # ----------------------------------------------------------------------------------------------- type checking
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.11"
 files = ["sqlmem", "tests", "scripts", "evals"]
 strict = true
 warn_unreachable = true
@@ -117,7 +125,7 @@ check_untyped_defs = true
 [tool.pyright]
 include = ["sqlmem", "tests", "scripts", "evals"]
 exclude = ["**/__pycache__", "build", ".venv", "kb"]
-pythonVersion = "3.10"
+pythonVersion = "3.11"
 typeCheckingMode = "standard"
 reportMissingModuleSource = "none"
 reportUnnecessaryTypeIgnoreComment = "error"

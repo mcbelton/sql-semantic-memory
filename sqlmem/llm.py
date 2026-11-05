@@ -307,7 +307,7 @@ class LLM:
 
         try:
             return await asyncio.wait_for(operation(), timeout=remaining)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             raise ValueError("model_deadline: learning exceeded 60 seconds") from None
 
     async def _memory_reply(self, client: Any, system: str, user: str, end: float) -> dict[str, Any]:

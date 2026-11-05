@@ -41,7 +41,7 @@ serves the knowledge to GitHub Copilot (or any agent) through an **MCP server**.
 
 ## Quick start (AdventureWorks2025, already built in `kb/adventureworks2025`)
 
-Clone and install:
+Clone and install with Python 3.11 or later:
 
 ```powershell
 git clone https://github.com/mcbelton/sql-semantic-memory.git
@@ -49,6 +49,9 @@ cd sql-semantic-memory
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -e ".[local,mcp,llm,duckdb,dev]"
 ```
+
+On Python 3.15, omit `local` (fastembed) and `mssql` (pyodbc) until their native dependencies publish 3.15 wheels;
+use Python 3.11-3.14 when you need local embeddings or SQL Server.
 
 The knowledge base is committed except its derived search index: after cloning, run
 `sqlmem build --kb kb\adventureworks2025` once (the MCP server does this automatically). Commands that touch data

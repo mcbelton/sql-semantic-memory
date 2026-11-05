@@ -1,20 +1,23 @@
 # Status and handoff
 
 Living document: **read it at the start of a session, update it before the session ends** (AGENTS.md rule 10).
-Last updated: 2026-11-05 (UTC), after public MIT publication under `mcbelton` on GitHub.com.
+Last updated: 2026-11-05 (UTC), after moving to Python 3.11-3.15 and fixing the first public CI failures.
 
 ## Where things stand
 
+- **Python support**: Python 3.11 is the minimum; CI tests 3.11-3.14 on Ubuntu and latest stable 3.15.2 on
+  Ubuntu quality gates, Windows and macOS; the cross-engine job uses 3.14 until pyodbc publishes 3.15 wheels.
+  On 3.15, `local` and `mssql` extras are unavailable ([ADR 0014](design/adr/0014-python-311-minimum-and-315-primary.md)).
+  Full local gates pass on 3.11.9 and 3.15.2: 349 passed/1 skipped, 88% coverage, 51/51 requirements, BM25 24/24.
+  The viewer test now proves active sockets are destroyed promptly and accepts macOS resets
+  ([evidence](evidence/2026-11-05-python-311-315-ci-fixes.md),
+  [review](reviews/2026-11-05-python-311-315-ci-fixes.md)). Hosted CI result is recorded in the evidence.
 - **Public**: [mcbelton/sql-semantic-memory](https://github.com/mcbelton/sql-semantic-memory), licensed under
   [MIT](../LICENSE); GitHub detects `MIT`, and private vulnerability reporting is enabled.
   `origin` is `https://github.com/mcbelton/sql-semantic-memory.git`. The recreated repository starts from scrubbed
   root commit `06577ce`; older commit IDs in records are local provenance.
-  Local clean-install verification passes after explicitly declaring the existing HTTPX transport in the `llm` extra:
-  all seven gates PASS, 349 tests passed/1 skipped, 88% coverage, 51/51 requirements, BM25 24/24;
-  SQLite and DuckDB passed locally.
-  The [first public CI run](https://github.com/mcbelton/sql-semantic-memory/actions/runs/41962266224) failed:
-  quality, Windows/3.13, Ubuntu/3.11-3.12 and all three external engines passed; Ubuntu/3.10 and macOS failed.
-  Independent review approved the publication scope. See the
+  The [first public CI run](https://github.com/mcbelton/sql-semantic-memory/actions/runs/41962266224) failed on
+  Ubuntu/3.10 and macOS; those failures are addressed by the Python support change above. See the
   [publication evidence](evidence/2026-11-05-github-publication.md) for commands, results and limitations.
 - Reviewed the uncommitted VS Code migration of six prompts to skills:
   [changes requested](reviews/2026-11-03-prompt-to-skill-migration.md). Static checks found six valid headers
@@ -70,20 +73,13 @@ Last updated: 2026-11-05 (UTC), after public MIT publication under `mcbelton` on
 
 ## Next steps (in order)
 
-1. **Fix the first public CI failures test-first.**
-   [Run 41962266224](https://github.com/mcbelton/sql-semantic-memory/actions/runs/41962266224) failed on:
-   - Ubuntu/Python 3.10: `tests/test_charts.py::test_fractional_datetime_order_is_chronological`
-     (`sqlmem/charts.py:249` rejects an ISO datetime) and
-     `tests/test_memory_lifecycle.py::test_projection_failure_commits_and_next_recall_repairs`
-     (`store_failed: private`, `sqlmem/memory_lifecycle.py:193`);
-   - macOS/Python 3.13: `tests/test_chart_canvas.py::test_chart_canvas`, where the Node viewer request-cap test
-     raised `ECONNRESET`.
-   Reproduce on the matching runtime, preserve REQ-AMEM-01/09 and REQ-CHART-01/08, then require green CI.
-   Preserve the cancellation requirement if the earlier intermittent failure recurs;
+1. **Confirm the Python 3.11-3.15 CI run is green.**
+   If any matrix job fails, reproduce it on that runtime and fix it test-first. Preserve the cancellation
+   requirement if the earlier intermittent failure recurs;
    the [review](reviews/2026-11-03-duckdb-azure-documentation.md) documents the previous failing run.
 
    ```powershell
-   gh run view 41962266224 --repo mcbelton/sql-semantic-memory --log-failed
+   gh run list --repo mcbelton/sql-semantic-memory --workflow ci.yml --limit 1
    ```
 
 2. **Repair the prompt-to-skill migration before treating it as approved.**
@@ -104,7 +100,7 @@ Last updated: 2026-11-05 (UTC), after public MIT publication under `mcbelton` on
 | What | Where |
 |---|---|
 | Repository | `D:\dev\sql-semantic-memory`, its own git repository (`D:\dev` holds several repositories and is never committed) |
-| Python | `.venv` (Python 3.14.7, AMD64) with `mcp,llm,duckdb,dev`; fastembed and external-engine extras not installed |
+| Python | `.venv` (3.14.7); `build\venv311` (3.11.9 minimum) and `build\venv315` (3.15.2 primary, per-user install under `%LOCALAPPDATA%\Programs\Python\Python315`) with `mcp,llm,duckdb,dev` |
 | Example database | Expected at `D:\dev\sql-semantic-memory\dbs\AdventureWorks2025.db` (ignored; not verified present on this machine) |
 | Test database servers | `.\scripts\engines.ps1 start`, `env`, `stop`; binaries cached in `%LOCALAPPDATA%\sqlmem-engines` |
 | Commit identity | repository-local: `Belton Albert <8398342+mcbelton@users.noreply.github.com>` |

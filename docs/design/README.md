@@ -25,5 +25,6 @@
 | [0011](adr/0011-bounded-offline-chart-visualization.md) | Bounded user-requested offline ECharts, guarded MCP tool and project canvas | Proposed |
 | [0012](adr/0012-bounded-source-linked-agentic-memory.md) | Bounded private source-linked agentic memory; automatic revisions and archive-only compaction; supersedes 0003 only for new private memory | Proposed |
 | [0013](adr/0013-declare-httpx-transport-dependency.md) | Declare the existing HTTPX transport dependency in the LLM extra | Proposed |
+| [0014](adr/0014-python-311-minimum-and-315-primary.md) | Require Python 3.11; test 3.11-3.15 with 3.15 as the primary version | Proposed |
 
 New ADR: copy [the template](adr/0000-template.md) (skill `write-adr`).

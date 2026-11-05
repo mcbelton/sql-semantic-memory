@@ -308,7 +308,7 @@ class KnowledgeBase:
     def _run(source: str, report: Report, part: int = 1, parts: int = 1) -> dict[str, Any]:
         run = {
             "by": source,
-            "at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
+            "at": dt.datetime.now(dt.UTC).isoformat(timespec="seconds"),
             "entities": report.entities,
             "relations": report.relations,
             "rejected": len(report.dropped),

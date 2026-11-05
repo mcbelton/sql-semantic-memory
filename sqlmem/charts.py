@@ -15,7 +15,7 @@ import uuid
 from collections import deque
 from collections.abc import Iterable
 from dataclasses import dataclass
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 from decimal import Decimal
 from pathlib import Path
 from typing import Any, TypeAlias, cast
@@ -244,7 +244,7 @@ def _normalize_cell(value: object, column: Column, warnings: list[str]) -> tuple
                 timestamp = datetime.fromisoformat(value.replace("Z", "+00:00")) if isinstance(value, str) else value
                 if timestamp.utcoffset() is None:
                     raise ValueError("Datetime values require an explicit timezone offset.")
-                result = timestamp.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+                result = timestamp.astimezone(UTC).isoformat().replace("+00:00", "Z")
         except (ValueError, OverflowError):
             raise ValueError("Use ISO dates or ISO datetimes with an explicit timezone offset.") from None
         return result, result
@@ -631,7 +631,7 @@ class Builder:
             raw_value = self.cell(row, "x")
             if column_kind == "datetime":
                 timestamp = datetime.fromisoformat(str(raw_value).replace("Z", "+00:00"))
-                value: float | str = (timestamp - datetime(1970, 1, 1, tzinfo=timezone.utc)).total_seconds()
+                value: float | str = (timestamp - datetime(1970, 1, 1, tzinfo=UTC)).total_seconds()
             elif column_kind == "date":
                 value = float(date.fromisoformat(str(raw_value)).toordinal())
             elif isinstance(raw_value, (int, float)):

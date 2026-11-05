@@ -179,16 +179,16 @@ class LifecycleStore:
                 if code is not None:
                     code &= 0xFF
                 elif str(error) == "database or disk is full":
-                    code = 13
+                    code = sqlite3.SQLITE_FULL
                 elif str(error) in ("database is locked", "database table is locked"):
-                    code = 5
-                if code == 13:  # SQLITE_FULL (constants are only exported by Python >=3.11)
+                    code = sqlite3.SQLITE_BUSY
+                if code == sqlite3.SQLITE_FULL:
                     fail(
                         "store_full",
                         "private",
                         "Back up with SQLite backup API and relocate; originals are not deleted.",
                     )
-                if code in (5, 6):  # SQLITE_BUSY, SQLITE_LOCKED
+                if code in (sqlite3.SQLITE_BUSY, sqlite3.SQLITE_LOCKED):
                     fail("store_busy", "private", "Another writer held the store for 5 seconds; retry.")
                 fail(
                     "store_failed", "private", "Check storage permissions/integrity and restore a backup if necessary."
@@ -211,7 +211,7 @@ class LifecycleStore:
     ) -> int:
         cursor = con.execute(
             "INSERT INTO events(at,operation,operation_key,payload_json) VALUES(?,?,?,?)",
-            (dt.datetime.now(dt.timezone.utc).isoformat(), operation, key, canonical(payload or {})),
+            (dt.datetime.now(dt.UTC).isoformat(), operation, key, canonical(payload or {})),
         )
         seq = cursor.lastrowid
         assert seq is not None

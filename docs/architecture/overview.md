@@ -137,7 +137,7 @@ remove active context, not originals. See the ADR for exact methods/tools/comman
 
 ## Technology
 
-Python ≥ 3.10 · SQLAlchemy 2 · SQLite FTS5 (BM25) · NumPy (vector search) · fastembed `BAAI/bge-small-en-v1.5`
+Python ≥ 3.11 · SQLAlchemy 2 · SQLite FTS5 (BM25) · NumPy (vector search) · fastembed `BAAI/bge-small-en-v1.5`
 (local embeddings, optional) · OpenAI SDK v1 (Azure OpenAI with Entra ID, OpenAI, Ollama; optional) · MCP Python SDK
 (optional) · PyYAML.
 

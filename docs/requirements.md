@@ -129,7 +129,7 @@ verification complement those tests. See the change's evidence record for measur
 |---|---|---|
 | QA-LINT | `ruff check` and `ruff format --check` report nothing; the agent hook formats only files an edit tool changed. | verify: lint, format |
 | QA-TYPES | `mypy` (strict) and `pyright` (the engine behind Pylance) report no errors or warnings. | verify: mypy, pyright |
-| QA-TESTS | All tests pass on Python 3.10 to 3.13, on Linux and Windows. | verify: tests, CI matrix |
+| QA-TESTS | All tests pass on Python 3.11 to 3.15 on Linux, and on Python 3.15 on Windows and macOS. | verify: tests, CI matrix |
 | QA-COVERAGE | Line and branch coverage of `sqlmem` stays at or above the threshold in `scripts/verify.py`. | verify: tests |
 | QA-ENGINES | The cross-engine scenario (`test_end_to_end_on_engine`) passes on SQLite, DuckDB, PostgreSQL, MariaDB and SQL Server. | CI engines job, `scripts/engines.ps1` |
 | QA-TRACE | Every active requirement is proven by at least one passing test; retired IDs are neither required nor accepted. | verify: traceability |

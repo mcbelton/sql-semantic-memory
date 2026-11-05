@@ -23,12 +23,19 @@ semantic versioning (minor bumps may break while < 1.0).
 - Pinned Apache ECharts and ECharts GL assets with bundled licenses; no additional Python runtime dependency.
 
 ### Changed
+- **Python 3.11 is now the minimum** (3.10 reached end of life in October 2026). CI tests Python 3.11–3.14 on
+  Linux and the latest stable Python 3.15 on Linux (quality gates), Windows and macOS; the cross-engine job uses
+  Python 3.14 because `pyodbc` has no 3.15 wheel yet. On Python 3.15, the `local` (fastembed/onnxruntime) and
+  `mssql` (pyodbc) extras are unavailable until upstream wheels exist
+  ([ADR 0014](docs/design/adr/0014-python-311-minimum-and-315-primary.md)).
 - The canonical public repository is now [mcbelton/sql-semantic-memory](https://github.com/mcbelton/sql-semantic-memory);
   security reports use GitHub private vulnerability reporting.
 - The VS Code AdventureWorks MCP configuration uses the local `dbs\AdventureWorks2025.db` copy directly instead
   of prompting for a database path. Place the database in the Git-ignored `dbs/` folder before starting the server.
 
 ### Fixed
+- The chart viewer request-cap test proves that closing the viewer destroys an active request within one second,
+  accepting either a graceful close or the connection reset that macOS reports.
 - Declare HTTPX directly in the `llm` extra so clean installs retain the memory identity transport when newer
   OpenAI/MCP SDKs depend on `httpx2` instead ([ADR 0013](docs/design/adr/0013-declare-httpx-transport-dependency.md)).
 - Private memory projection publication now follows the authoritative commit, with atomic index generations;

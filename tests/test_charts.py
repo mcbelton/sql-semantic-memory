@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
@@ -247,7 +247,7 @@ def test_hierarchy_invariants(rows):
 
 @pytest.mark.req("REQ-CHART-01")
 def test_time_decimal_and_gaps(tmp_path: Path, vendor: None):
-    source = data("x y", [[datetime(2026, 1, 1, tzinfo=timezone.utc), Decimal("0.1")]], kinds=["datetime", "number"])
+    source = data("x y", [[datetime(2026, 1, 1, tzinfo=UTC), Decimal("0.1")]], kinds=["datetime", "number"])
     option = build_chart_option(source, spec("time", x="x", y="y"))
     assert option["xAxis"]["type"] == "time"
     result = write_chart(source, spec("time", x="x", y="y"), output_root=tmp_path)

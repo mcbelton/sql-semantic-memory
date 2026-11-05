@@ -68,5 +68,6 @@ Stop the VS Code MCP server before reinstalling: pip rewrites `sqlmem.exe`, whic
 
 ## Code conventions
 
-Python ≥ 3.10, fully typed (`mypy --strict`), ruff-formatted (line length 120). Prefer small pure functions, explicit
-errors with actionable messages, and no new dependencies without an ADR. Details: `.github/instructions/`.
+Python ≥ 3.11 (tested on 3.11–3.15), fully typed (`mypy --strict`), ruff-formatted (line length 120). Prefer small
+pure functions, explicit errors with actionable messages, and no new dependencies without an ADR. Details:
+`.github/instructions/`.
