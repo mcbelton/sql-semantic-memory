@@ -11,7 +11,9 @@ Last updated: 2026-11-05 (UTC), after moving to Python 3.11-3.15 and fixing the 
   Full local gates pass on 3.11.9 and 3.15.2: 349 passed/1 skipped, 88% coverage, 51/51 requirements, BM25 24/24.
   The viewer test now proves active sockets are destroyed promptly and accepts macOS resets
   ([evidence](evidence/2026-11-05-python-311-315-ci-fixes.md),
-  [review](reviews/2026-11-05-python-311-315-ci-fixes.md)). Hosted CI result is recorded in the evidence.
+  [review](reviews/2026-11-05-python-311-315-ci-fixes.md)).
+  [CI run 41965908923](https://github.com/mcbelton/sql-semantic-memory/actions/runs/41965908923) is green on `fa9b0bb`:
+  8/8 jobs, including macOS/3.15 and all five database engines.
 - **Public**: [mcbelton/sql-semantic-memory](https://github.com/mcbelton/sql-semantic-memory), licensed under
   [MIT](../LICENSE); GitHub detects `MIT`, and private vulnerability reporting is enabled.
   `origin` is `https://github.com/mcbelton/sql-semantic-memory.git`. The recreated repository starts from scrubbed
@@ -73,19 +75,15 @@ Last updated: 2026-11-05 (UTC), after moving to Python 3.11-3.15 and fixing the 
 
 ## Next steps (in order)
 
-1. **Confirm the Python 3.11-3.15 CI run is green.**
-   If any matrix job fails, reproduce it on that runtime and fix it test-first. Preserve the cancellation
-   requirement if the earlier intermittent failure recurs;
-   the [review](reviews/2026-11-03-duckdb-azure-documentation.md) documents the previous failing run.
-
-   ```powershell
-   gh run list --repo mcbelton/sql-semantic-memory --workflow ci.yml --limit 1
-   ```
-
-2. **Repair the prompt-to-skill migration before treating it as approved.**
+1. **Repair the prompt-to-skill migration before treating it as approved.**
    Rebase the nine broken relative references and preserve the six custom-agent selections documented in the
    [review](reviews/2026-11-03-prompt-to-skill-migration.md). Those pre-existing customization findings are not
-   changed by publication or the transport dependency fix.
+   changed by publication or the Python support update.
+
+2. **Move Python 3.15 extras when upstream wheels exist.**
+   When onnxruntime and pyodbc publish 3.15 wheels, move the engine job to 3.15 and remove the `local`/`mssql`
+   README limitation. Keep CI green; if the earlier intermittent cancellation failure recurs, preserve the
+   requirement and use the [review](reviews/2026-11-03-duckdb-azure-documentation.md) as the starting point.
 
 3. **Restart the sqlmem MCP server** in VS Code to expose the new memory lifecycle tools (and `create_chart`
    for processes predating charts). Follow the [private memory workflow](../README.md#private-source-linked-agentic-memory):
