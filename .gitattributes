@@ -1,0 +1,11 @@
+# Store text with LF; Windows checkouts keep LF too (editors, ruff and git all handle it).
+* text=auto eol=lf
+*.ps1 text eol=crlf
+*.db binary
+*.duckdb binary
+*.png binary
+# Generated example knowledge base: collapsed in GitHub diffs and excluded from language statistics.
+kb/** linguist-generated=true
+kb/**/semantic.yaml linguist-generated=false
+kb/**/knowledge_graph.yaml linguist-generated=false
+kb/**/memories.jsonl linguist-generated=false

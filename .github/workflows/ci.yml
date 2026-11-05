@@ -1,0 +1,143 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PYTHONUTF8: "1"
+
+jobs:
+  quality:
+    name: Quality gates (lint, types, tests, eval, traceability)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[mcp,llm,duckdb,dev]"
+      - name: Verify (scripts/verify.py)
+        run: python scripts/verify.py
+      - name: Evidence summary
+        if: always()
+        shell: bash
+        run: if [ -f build/evidence/summary.md ]; then cat build/evidence/summary.md >> "$GITHUB_STEP_SUMMARY"; fi
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: evidence-quality
+          path: build/evidence
+          if-no-files-found: warn
+
+  tests:
+    name: Tests (${{ matrix.os }}, Python ${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, python: "3.10" }
+          - { os: ubuntu-latest, python: "3.11" }
+          - { os: ubuntu-latest, python: "3.12" }
+          - { os: windows-latest, python: "3.13" }
+          - { os: macos-latest, python: "3.13" }
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[mcp,llm,duckdb,dev]"
+      - name: Tests, eval and traceability
+        run: python scripts/verify.py --skip lint format mypy pyright
+      - name: Evidence summary
+        if: always()
+        shell: bash
+        run: if [ -f build/evidence/summary.md ]; then cat build/evidence/summary.md >> "$GITHUB_STEP_SUMMARY"; fi
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: evidence-tests-${{ matrix.os }}-py${{ matrix.python }}
+          path: build/evidence
+          if-no-files-found: warn
+
+  engines:
+    name: Cross-engine (PostgreSQL 18, MariaDB 11.4, SQL Server 2022)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - name: Generate a throwaway SQL Server password
+        run: |
+          pw="$(openssl rand -hex 12)Aa1"  # upper, lower and digits satisfy the SQL Server policy
+          echo "::add-mask::$pw"
+          echo "MSSQL_SA_PASSWORD=$pw" >> "$GITHUB_ENV"
+      - name: Start database servers (compose.yaml)
+        run: docker compose up -d --wait
+      - name: Install the Microsoft ODBC driver
+        run: |
+          if ! odbcinst -q -d -n "ODBC Driver 18 for SQL Server" >/dev/null 2>&1; then
+            curl -fsSL "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb" -o /tmp/packages-microsoft-prod.deb
+            sudo dpkg -i /tmp/packages-microsoft-prod.deb
+            sudo apt-get update -q
+            sudo ACCEPT_EULA=Y apt-get install -y -q msodbcsql18
+          fi
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install
+        run: python -m pip install -e ".[mcp,llm,duckdb,postgres,mysql,mssql,dev]"
+      - name: Point the tests at the servers
+        shell: python
+        run: |
+          import os
+          import urllib.parse
+
+          password = os.environ["MSSQL_SA_PASSWORD"]
+          print(f"::add-mask::{urllib.parse.quote_plus(password)}")
+          odbc = f"Driver={{ODBC Driver 18 for SQL Server}};Server=127.0.0.1,14339;UID=sa;PWD={password};TrustServerCertificate=yes;"
+          urls = [
+              "postgresql+psycopg://postgres@127.0.0.1:54329/postgres",
+              "mysql+pymysql://root@127.0.0.1:33069/mysql",
+              "mssql+pyodbc:///?odbc_connect=" + urllib.parse.quote_plus(odbc + "Database=tempdb;"),
+          ]
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env:
+              env.write(f"SQLMEM_TEST_URLS={' '.join(urls)}\n")
+              env.write(f"SQLMEM_MSSQL_ODBC={odbc}\n")
+      - name: Cross-engine tests, eval and traceability (all engines required)
+        run: python scripts/verify.py --skip lint format mypy pyright --require-engines
+      - name: Evidence summary
+        if: always()
+        run: if [ -f build/evidence/summary.md ]; then cat build/evidence/summary.md >> "$GITHUB_STEP_SUMMARY"; fi
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: evidence-engines
+          path: build/evidence
+          if-no-files-found: warn
+      - name: Stop database servers
+        if: always()
+        run: docker compose down -v

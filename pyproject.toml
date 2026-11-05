@@ -1,0 +1,123 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sqlmem"
+version = "0.2.0"
+description = "Semantic knowledge + long-term memory for an entire SQL database, served to AI agents (CLI + MCP)."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+dependencies = [
+  "SQLAlchemy>=2.0",
+  "PyYAML>=6.0",
+  "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+local = ["fastembed>=0.4"]
+mcp = ["mcp>=2.0"]
+llm = ["openai>=1.40", "azure-identity>=1.15", "httpx>=0.27,<1"]
+mssql = ["pyodbc>=5"]
+postgres = ["psycopg[binary]>=3.1"]
+mysql = ["pymysql>=1.1"]
+duckdb = ["duckdb-engine>=0.13"]
+oracle = ["oracledb>=2"]
+dev = [
+  "sqlmem[mcp,llm,duckdb]",  # everything the tests and type checkers import
+  "pytest>=8",
+  "pytest-cov>=5",
+  # Gate tools are pinned so every machine and CI reach the same verdict; Dependabot proposes upgrades.
+  "ruff==0.17.3",
+  "mypy==2.4.1",
+  "pyright==1.1.414",
+  "types-PyYAML>=6.0",
+]
+
+[project.scripts]
+sqlmem = "sqlmem.cli:main"
+
+[tool.setuptools]
+packages = ["sqlmem"]
+include-package-data = false
+
+[tool.setuptools.package-data]
+sqlmem = ["py.typed", "assets/*.html", "assets/*.css", "assets/*.js", "assets/vendor/*"]
+
+# ----------------------------------------------------------------------------------------------- tests
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--strict-markers", "-ra"]
+markers = [
+  "req(*ids): requirement ids from docs/requirements.md that the test provides evidence for",
+]
+filterwarnings = [
+  # duckdb-engine cannot reflect indexes yet (known third-party limitation)
+  "ignore:duckdb-engine doesn't yet support reflection on indices:Warning",
+]
+junit_family = "xunit2"
+
+[tool.coverage.run]
+source = ["sqlmem"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+
+# ----------------------------------------------------------------------------------------------- lint + format
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+extend-exclude = ["kb", "build"]
+
+[tool.ruff.lint]
+select = [
+  "E", "W",   # pycodestyle
+  "F",        # pyflakes
+  "I",        # import sorting
+  "B",        # bugbear
+  "UP",       # pyupgrade (py310+)
+  "SIM",      # simplify
+  "C4",       # comprehensions
+  "PIE",      # misc lints
+  "PT",       # pytest style
+  "RET",      # return statements
+  "ISC",      # implicit string concatenation
+  "RUF",      # ruff-specific
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["sqlmem"]
+
+# ----------------------------------------------------------------------------------------------- type checking
+[tool.mypy]
+python_version = "3.10"
+files = ["sqlmem", "tests", "scripts", "evals"]
+strict = true
+warn_unreachable = true
+pretty = true
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = ["duckdb_engine.*", "duckdb.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+# Tests, scripts and evals: every body is type-checked, but helper functions may stay unannotated.
+module = ["tests.*", "scripts.*", "evals.*"]
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+disallow_untyped_calls = false
+check_untyped_defs = true
+
+# Same engine as Pylance in VS Code: no errors or warnings allowed in CI.
+[tool.pyright]
+include = ["sqlmem", "tests", "scripts", "evals"]
+exclude = ["**/__pycache__", "build", ".venv", "kb"]
+pythonVersion = "3.10"
+typeCheckingMode = "standard"
+reportMissingModuleSource = "none"
+reportUnnecessaryTypeIgnoreComment = "error"

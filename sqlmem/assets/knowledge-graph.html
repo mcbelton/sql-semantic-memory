@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>__TITLE__ - knowledge graph</title>
+<script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+<style>
+  body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; display: flex; height: 100vh; color: #222; }
+  #side { width: 380px; padding: 12px 16px; border-right: 1px solid #ddd; overflow: auto; box-sizing: border-box; }
+  #net { flex: 1; }
+  h1 { font-size: 18px; margin: 4px 0; } h2 { font-size: 15px; margin: 12px 0 4px; }
+  .muted { color: #666; font-size: 12px; }
+  input[type=search] { width: 100%; padding: 6px; margin: 10px 0 6px; box-sizing: border-box; }
+  #details { font-size: 13px; } #details li { margin: 3px 0; }
+  code { background: #f3f3f3; padding: 1px 4px; white-space: pre-wrap; word-break: break-word; font-size: 12px; }
+  .legend { margin: 8px 0; font-size: 12px; } .legend span { display: inline-block; margin: 0 10px 4px 0; }
+  .sw { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: -1px; }
+  a { color: #0b62a4; cursor: pointer; }
+</style>
+</head>
+<body>
+<div id="side">
+  <h1>__TITLE__</h1>
+  <div class="muted" id="summary"></div>
+  <input id="q" type="search" placeholder="Find an entity, synonym or table...">
+  <label class="muted"><input type="checkbox" id="tables"> show database tables</label>
+  <div class="legend" id="legend"></div>
+  <div class="muted">Shapes: dot = core, diamond = event, square = reference, triangle = role. Dashed = is a.</div>
+  <div id="details"><p class="muted">Click an entity or a relation for details.</p></div>
+</div>
+<div id="net"></div>
+<script>
+const DATA = __DATA__;
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const fmt = n => (typeof n === "number") ? n.toLocaleString() : "?";
+const palette = ["#4e79a7", "#f28e2b", "#e15759", "#76b7b2", "#59a14f", "#edc948", "#b07aa1", "#ff9da7", "#9c755f", "#86bcb6"];
+const domains = [...new Set(DATA.entities.map(e => e.domain))].sort();
+const colorOf = d => palette[domains.indexOf(d) % palette.length];
+const shapes = {core: "dot", event: "diamond", reference: "square", role: "triangle"};
+const byName = Object.fromEntries(DATA.entities.map(e => [e.name, e]));
+document.getElementById("summary").textContent =
+  `${DATA.entities.length} entities, ${DATA.relations.length} relations, ${DATA.tables.length} tables (${DATA.dialect})`;
+document.getElementById("legend").innerHTML =
+  domains.map(d => `<span><i class="sw" style="background:${colorOf(d)}"></i>${esc(d)}</span>`).join("");
+const nodes = new vis.DataSet(DATA.entities.map(e => ({
+  id: "e:" + e.name, label: e.name, shape: shapes[e.kind] || "dot", color: colorOf(e.domain),
+  size: 10 + Math.min(16, Math.log10((e.rows || 0) + 1) * 3), font: {size: 18}, title: e.description || e.name})));
+const edges = new vis.DataSet(DATA.relations.map((r, i) => ({
+  id: "r:" + i, from: "e:" + r.subject, to: "e:" + r.object, arrows: "to",
+  label: r.predicate.replace(/_/g, " "), font: {size: 12, align: "middle"}, color: {color: "#9a9a9a"}})));
+DATA.entities.forEach((e, i) => { if (e.is_a && byName[e.is_a]) edges.add({
+  id: "i:" + i, from: "e:" + e.name, to: "e:" + e.is_a, arrows: "to", dashes: true, label: "is a",
+  font: {size: 10}, color: {color: "#c4c4c4"}}); });
+const net = new vis.Network(document.getElementById("net"), {nodes, edges}, {
+  physics: {solver: "forceAtlas2Based", forceAtlas2Based: {gravitationalConstant: -80, springLength: 140},
+            stabilization: {iterations: 400}},
+  interaction: {hover: true, tooltipDelay: 200}, edges: {smooth: {type: "dynamic"}}});
+net.once("stabilizationIterationsDone", () => net.setOptions({physics: false}));
+
+function relLine(r) {
+  const facts = r.facts ? `, ${esc(r.facts)} in data` : "";
+  return `<li><a data-e="${esc(r.subject)}">${esc(r.subject)}</a> <b>${esc(r.predicate.replace(/_/g, " "))}</b> ` +
+         `<a data-e="${esc(r.object)}">${esc(r.object)}</a> <span class="muted">(${esc(r.cardinality || "?")}${facts})</span>` +
+         `<br><code>${esc(r.join)}</code></li>`;
+}
+function showEntity(name) {
+  const e = byName[name]; if (!e) return;
+  const rels = DATA.relations.filter(r => r.subject === name || r.object === name);
+  const kids = DATA.entities.filter(x => x.is_a === name).map(x => `<a data-e="${esc(x.name)}">${esc(x.name)}</a>`);
+  document.getElementById("details").innerHTML =
+    `<h2>${esc(e.name)}</h2><div class="muted">${esc(e.kind)}${e.is_a ? " &middot; is a " + `<a data-e="${esc(e.is_a)}">${esc(e.is_a)}</a>` : ""}` +
+    ` &middot; ${fmt(e.rows)} rows</div><p>${esc(e.description)}</p>` +
+    (e.synonyms && e.synonyms.length ? `<div class="muted">Also called: ${esc(e.synonyms.join(", "))}</div>` : "") +
+    `<p>Stored in <code>${esc(e.table)}${e.filter ? " WHERE " + esc(e.filter) : ""}</code>` +
+    (e.key ? `<br>Key: <code>${esc(e.key)}</code>` : "") +
+    (e.label && e.label.length ? `<br>Label: <code>${esc(e.label.join(", "))}</code>` : "") +
+    (e.attributes && e.attributes.length ? `<br>Attributes: ${esc(e.attributes.join(", "))}` : "") + `</p>` +
+    (kids.length ? `<div>Subtypes: ${kids.join(", ")}</div>` : "") +
+    `<h2>Relations (${rels.length})</h2><ul>${rels.map(relLine).join("")}</ul>`;
+}
+function showRelation(r) {
+  document.getElementById("details").innerHTML = `<h2>Relation</h2><ul>${relLine(r)}</ul><p>${esc(r.description)}</p>`;
+}
+document.getElementById("details").addEventListener("click", ev => {
+  const n = ev.target.getAttribute && ev.target.getAttribute("data-e");
+  if (n) { net.selectNodes(["e:" + n]); net.focus("e:" + n, {scale: 1.1, animation: true}); showEntity(n); }
+});
+net.on("click", p => {
+  if (p.nodes.length && String(p.nodes[0]).startsWith("e:")) showEntity(String(p.nodes[0]).slice(2));
+  else if (p.edges.length && String(p.edges[0]).startsWith("r:")) showRelation(DATA.relations[+String(p.edges[0]).slice(2)]);
+});
+document.getElementById("q").addEventListener("input", ev => {
+  const q = ev.target.value.trim().toLowerCase(); if (!q) return;
+  const e = DATA.entities.find(x => x.name.toLowerCase().includes(q)) ||
+            DATA.entities.find(x => (x.synonyms || []).some(s => s.toLowerCase().includes(q))) ||
+            DATA.entities.find(x => x.table.toLowerCase().includes(q));
+  if (e) { net.selectNodes(["e:" + e.name]); net.focus("e:" + e.name, {scale: 1.1, animation: true}); showEntity(e.name); }
+});
+document.getElementById("tables").addEventListener("change", ev => {
+  if (ev.target.checked) {
+    nodes.add(DATA.tables.map(t => ({id: "t:" + t, label: t, shape: "box", color: "#eeeeee", font: {size: 11}})));
+    edges.add(DATA.entities.map((e, i) => ({id: "s:" + i, from: "e:" + e.name, to: "t:" + e.table, dashes: [2, 4],
+                                            color: {color: "#d0d0d0"}, arrows: ""})));
+    net.setOptions({physics: true}); net.once("stabilizationIterationsDone", () => net.setOptions({physics: false}));
+  } else {
+    nodes.remove(nodes.getIds().filter(id => String(id).startsWith("t:")));
+    edges.remove(edges.getIds().filter(id => String(id).startsWith("s:")));
+  }
+});
+</script>
+</body>
+</html>

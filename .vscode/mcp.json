@@ -1,0 +1,12 @@
+{
+  // Used when this repository is opened as the VS Code workspace folder (Windows path to the venv's script;
+  // on Linux/macOS use ${workspaceFolder}/.venv/bin/sqlmem). Stop the server before reinstalling sqlmem.
+  "servers": {
+    "adventureworks-memory": {
+      "type": "stdio",
+      "command": "${workspaceFolder}/.venv/Scripts/sqlmem.exe",
+      "args": ["mcp", "--kb", "${workspaceFolder}/kb/adventureworks2025", "--db", "${workspaceFolder}\\dbs\\AdventureWorks2025.db"],
+      "cwd": "${workspaceFolder}"
+    }
+  }
+}

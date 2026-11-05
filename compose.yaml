@@ -1,0 +1,53 @@
+# Database servers for the cross-engine tests (Linux, macOS, or Docker on Windows).
+# Same ports as scripts/engines.ps1, so the same test URLs work everywhere:
+#
+#   export MSSQL_SA_PASSWORD="$(openssl rand -hex 12)Aa1"   # throwaway; hex keeps it URL-safe; never commit it
+#   docker compose up -d --wait
+#   export SQLMEM_TEST_URLS="postgresql+psycopg://postgres@127.0.0.1:54329/postgres \
+#     mysql+pymysql://root@127.0.0.1:33069/mysql \
+#     mssql+pyodbc://sa:$MSSQL_SA_PASSWORD@127.0.0.1:14339/tempdb?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes"
+#   export SQLMEM_MSSQL_ODBC="Driver={ODBC Driver 18 for SQL Server};Server=127.0.0.1,14339;UID=sa;PWD=$MSSQL_SA_PASSWORD;TrustServerCertificate=yes;"
+#   python scripts/verify.py --require-engines   # every engine must pass the cross-engine scenario
+#   docker compose down -v
+#
+# The servers listen on 127.0.0.1 only and use throwaway, passwordless (PostgreSQL, MariaDB) accounts:
+# never expose them beyond your machine.
+name: sqlmem-engines
+
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports: ["127.0.0.1:54329:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+  mariadb:
+    image: mariadb:11.4
+    environment:
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "1"
+    ports: ["127.0.0.1:33069:3306"]
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:?set MSSQL_SA_PASSWORD to a strong password}
+    ports: ["127.0.0.1:14339:1433"]
+    healthcheck:
+      # mssql-tools18 in current images, mssql-tools in older ones
+      test: ["CMD-SHELL", "for t in /opt/mssql-tools18/bin/sqlcmd /opt/mssql-tools/bin/sqlcmd; do [ -x $$t ] && exec $$t -C -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -Q 'SELECT 1' -b -o /dev/null; done; exit 1"]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 20s

@@ -1,0 +1,72 @@
+# Retrieval evaluation for the AdventureWorks2025 example knowledge base (kb/adventureworks2025).
+#
+# For each question, the context pack built by `sqlmem context` must list every table needed to write the
+# correct SQL under "## Relevant tables". Run: python -m evals.run_retrieval --help
+#
+# Gates are keyed by embedder family (the part of the embedder spec before ':'):
+#   none       BM25 only (no model download; what CI runs)
+#   hash       hashed bag-of-words vectors (deterministic, no model; used by unit tests)
+#   fastembed  local BAAI/bge-small-en-v1.5 (the KB's configured embedder; run locally)
+# Raise a gate when a change improves retrieval; never lower one without an ADR that explains why.
+kb: kb/adventureworks2025
+gates:
+  none: {min_full: 24, min_recall: 1.0}
+  hash: {min_full: 23, min_recall: 0.98}
+  fastembed: {min_full: 24, min_recall: 1.0}
+
+cases:
+  # Questions phrased in database/analyst terms (curated semantic.yaml + memories).
+  - question: What was our total revenue in 2024?
+    tables: [Sales__SalesOrderHeader]
+  - question: revenue by territory last year
+    tables: [Sales__SalesOrderHeader, Sales__SalesTerritory]
+  - question: How many orders came through the internet versus resellers?
+    tables: [Sales__SalesOrderHeader]
+  - question: Which bike shops bought the most?
+    tables: [Sales__Store, Sales__Customer, Sales__SalesOrderHeader]
+  - question: best selling mountain bikes by units
+    tables: [Sales__SalesOrderDetail, Production__Product, Production__ProductSubcategory]
+  - question: sales by product category
+    tables: [Sales__SalesOrderDetail, Production__Product, Production__ProductSubcategory, Production__ProductCategory]
+  - question: Which sales reps beat their quota?
+    tables: [Sales__SalesPerson]
+  - question: names of sales people and their sales this year
+    tables: [Sales__SalesPerson, Person__Person]
+  - question: how many employees work in each department
+    tables: [HumanResources__EmployeeDepartmentHistory, HumanResources__Department]
+  - question: average hourly wage by job title
+    tables: [HumanResources__EmployeePayHistory, HumanResources__Employee]
+  - question: which products need to be reordered because stock is low
+    tables: [Production__Product, Production__ProductInventory]
+  - question: top suppliers by spend
+    tables: [Purchasing__Vendor, Purchasing__PurchaseOrderHeader]
+  - question: why do work orders get scrapped
+    tables: [Production__WorkOrder, Production__ScrapReason]
+  - question: customers in Germany
+    tables: [Sales__Customer, Sales__SalesTerritory]
+  - question: what discounts did we give in promotions
+    tables: [Sales__SpecialOffer, Sales__SalesOrderDetail]
+  - question: profit margin per product
+    tables: [Sales__SalesOrderDetail, Production__Product]
+  - question: exchange rate from US dollar to euro
+    tables: [Sales__CurrencyRate]
+  - question: average product rating from reviews
+    tables: [Production__ProductReview]
+  - question: components needed to build a bike
+    tables: [Production__BillOfMaterials, Production__Product]
+  - question: which vendors supply helmets
+    tables: [Purchasing__ProductVendor, Purchasing__Vendor, Production__Product]
+
+  # Questions phrased in business-concept terms (answered through the knowledge graph).
+  - question: Which store contacts work for resellers in Canada?
+    tables: [Sales__Store, Person__BusinessEntityContact, Person__Person]
+    concept: true
+  - question: Where do our online orders ship to?
+    tables: [Sales__SalesOrderHeader, Person__Address]
+    concept: true
+  - question: Which department does each employee currently work in?
+    tables: [HumanResources__EmployeeDepartmentHistory, HumanResources__Department, HumanResources__Employee]
+    concept: true
+  - question: Which languages are product model descriptions available in?
+    tables: [Production__ProductModelProductDescriptionCulture, Production__Culture]
+    concept: true

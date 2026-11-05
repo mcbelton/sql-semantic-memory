@@ -1,0 +1,27 @@
+{
+  "format": "sqlmem-chart-vendor",
+  "version": 1,
+  "bundles": [
+    {
+      "file": "echarts.min.js",
+      "name": "Apache ECharts",
+      "version": "5.6.0",
+      "license": "Apache-2.0",
+      "source": "https://raw.githubusercontent.com/apache/echarts/5.6.0/dist/echarts.min.js",
+      "sha256": "bf4a223524e40b77c304bec67e1222cf551f14880cf42c69dc046558e11c07b1",
+      "notices": ["echarts.LICENSE", "echarts.NOTICE", "echarts.LICENSE-d3", "zrender.LICENSE", "tslib.LICENSE"]
+    },
+    {
+      "file": "echarts-gl.min.js",
+      "name": "ECharts GL",
+      "version": "2.1.0",
+      "license": "BSD-3-Clause",
+      "source": "https://raw.githubusercontent.com/ecomfe/echarts-gl/2.1.0/dist/echarts-gl.min.js",
+      "upstream_sha256": "d6d60f2165ce3eb1ea360ef62e8490835e0ae2c1e0c1788a772fff918e350842",
+      "sha256": "92d563042ea6531c913db08caa2078af2f10718a96d461ba86520a9ae4853c4d",
+      "patch": "scripts/build_chart_vendor.py: exhaustive static compositor expressions for strict CSP",
+      "echarts_peer": "^5.1.2 || ^6.0.0",
+      "notices": ["echarts-gl.LICENSE", "echarts-gl.NOTICE", "claygl.LICENSE", "zrender.LICENSE"]
+    }
+  ]
+}

@@ -1,0 +1,5551 @@
+{
+ "nodes": [
+  {
+   "id": "dbo__AWBuildVersion",
+   "type": "table",
+   "domain": "dbo",
+   "rows": 1,
+   "description": "Current version number of the AdventureWorks sample database (technical)."
+  },
+  {
+   "id": "dbo__DatabaseLog",
+   "type": "table",
+   "domain": "dbo",
+   "rows": 934,
+   "description": "Audit log of DDL changes made to the database (technical, not business data)."
+  },
+  {
+   "id": "dbo__ErrorLog",
+   "type": "table",
+   "domain": "dbo",
+   "rows": 0,
+   "description": "Errors captured by the database's error-handling procedure (technical, empty)."
+  },
+  {
+   "id": "HumanResources__Department",
+   "type": "table",
+   "domain": "HumanResources",
+   "rows": 16,
+   "description": "Departments (Engineering, Sales, Production, ...) grouped into department groups."
+  },
+  {
+   "id": "HumanResources__Employee",
+   "type": "table",
+   "domain": "HumanResources",
+   "rows": 290,
+   "description": "Employees: job title, hire date, demographics, hourly/salaried, vacation and sick leave. Names are in Person__Person (same BusinessEntityID)."
+  },
+  {
+   "id": "HumanResources__EmployeeDepartmentHistory",
+   "type": "table",
+   "domain": "HumanResources",
+   "rows": 296,
+   "description": "Department and shift assignments of employees over time. EndDate NULL = the employee's current department."
+  },
+  {
+   "id": "HumanResources__EmployeePayHistory",
+   "type": "table",
+   "domain": "HumanResources",
+   "rows": 316,
+   "description": "Pay rate changes per employee. The current rate is the row with the latest RateChangeDate."
+  },
+  {
+   "id": "HumanResources__JobCandidate",
+   "type": "table",
+   "domain": "HumanResources",
+   "rows": 13,
+   "description": "Resumes (XML) submitted by job applicants; BusinessEntityID is set if the candidate was hired."
+  },
+  {
+   "id": "HumanResources__Shift",
+   "type": "table",
+   "domain": "HumanResources",
+   "rows": 3,
+   "description": "Work shifts (Day, Evening, Night) with start and end times."
+  },
+  {
+   "id": "Person__Address",
+   "type": "table",
+   "domain": "Person",
+   "rows": 19614,
+   "description": "Street addresses of customers, employees, stores and vendors."
+  },
+  {
+   "id": "Person__AddressType",
+   "type": "table",
+   "domain": "Person",
+   "rows": 6,
+   "description": "Types of addresses (Billing, Home, Main Office, Primary, Shipping, Archive)."
+  },
+  {
+   "id": "Person__BusinessEntity",
+   "type": "table",
+   "domain": "Person",
+   "rows": 20777,
+   "description": "Source of the BusinessEntityID shared by people, stores and vendors (the common key for addresses and contacts)."
+  },
+  {
+   "id": "Person__BusinessEntityAddress",
+   "type": "table",
+   "domain": "Person",
+   "rows": 19614,
+   "description": "Cross-reference mapping people, stores and vendors to their addresses (with address type)."
+  },
+  {
+   "id": "Person__BusinessEntityContact",
+   "type": "table",
+   "domain": "Person",
+   "rows": 909,
+   "description": "Cross-reference mapping stores and vendors to their contact people (with contact type)."
+  },
+  {
+   "id": "Person__ContactType",
+   "type": "table",
+   "domain": "Person",
+   "rows": 20,
+   "description": "Roles of business contacts (Owner, Purchasing Agent, Marketing Manager, ...)."
+  },
+  {
+   "id": "Person__CountryRegion",
+   "type": "table",
+   "domain": "Person",
+   "rows": 238,
+   "description": "ISO country/region codes and names."
+  },
+  {
+   "id": "Person__EmailAddress",
+   "type": "table",
+   "domain": "Person",
+   "rows": 19972,
+   "description": "E-mail addresses of people."
+  },
+  {
+   "id": "Person__Password",
+   "type": "table",
+   "domain": "Person",
+   "rows": 19972,
+   "description": "One-way hashed passwords of people (never select these columns)."
+  },
+  {
+   "id": "Person__Person",
+   "type": "table",
+   "domain": "Person",
+   "rows": 19972,
+   "description": "Every human known to Adventure Works: employees, sales people, individual customers, store and vendor contacts. Holds names and contact preferences."
+  },
+  {
+   "id": "Person__PersonPhone",
+   "type": "table",
+   "domain": "Person",
+   "rows": 19972,
+   "description": "Phone numbers of people with phone type."
+  },
+  {
+   "id": "Person__PhoneNumberType",
+   "type": "table",
+   "domain": "Person",
+   "rows": 3,
+   "description": "Phone number types (Cell, Home, Work)."
+  },
+  {
+   "id": "Person__StateProvince",
+   "type": "table",
+   "domain": "Person",
+   "rows": 181,
+   "description": "States and provinces with their country and sales territory."
+  },
+  {
+   "id": "Production__BillOfMaterials",
+   "type": "table",
+   "domain": "Production",
+   "rows": 2679,
+   "description": "Bill of materials: components required to build each product assembly (hierarchical parent/child)."
+  },
+  {
+   "id": "Production__Culture",
+   "type": "table",
+   "domain": "Production",
+   "rows": 8,
+   "description": "Languages in which product descriptions are stored. CultureID is padded to 6 characters ('en    ')."
+  },
+  {
+   "id": "Production__Document",
+   "type": "table",
+   "domain": "Production",
+   "rows": 12,
+   "description": "Product maintenance documents (hierarchical folders and documents)."
+  },
+  {
+   "id": "Production__Illustration",
+   "type": "table",
+   "domain": "Production",
+   "rows": 5,
+   "description": "Bicycle assembly diagrams (XML)."
+  },
+  {
+   "id": "Production__Location",
+   "type": "table",
+   "domain": "Production",
+   "rows": 14,
+   "description": "Inventory and manufacturing locations (work centers such as Frame Welding, Paint, Final Assembly, and storage areas)."
+  },
+  {
+   "id": "Production__Product",
+   "type": "table",
+   "domain": "Production",
+   "rows": 504,
+   "description": "Products sold or used in manufacturing: bikes, components, clothing and accessories, with pricing, cost, attributes and lifecycle dates."
+  },
+  {
+   "id": "Production__ProductCategory",
+   "type": "table",
+   "domain": "Production",
+   "rows": 4,
+   "description": "Top level of the product hierarchy: Bikes, Components, Clothing, Accessories."
+  },
+  {
+   "id": "Production__ProductCostHistory",
+   "type": "table",
+   "domain": "Production",
+   "rows": 395,
+   "description": "History of product standard costs (StartDate/EndDate; EndDate NULL = current). Use for period-accurate cost of goods."
+  },
+  {
+   "id": "Production__ProductDescription",
+   "type": "table",
+   "domain": "Production",
+   "rows": 762,
+   "description": "Product descriptions (marketing text) in several languages."
+  },
+  {
+   "id": "Production__ProductDocument",
+   "type": "table",
+   "domain": "Production",
+   "rows": 32,
+   "description": "Cross-reference mapping products to related documents."
+  },
+  {
+   "id": "Production__ProductInventory",
+   "type": "table",
+   "domain": "Production",
+   "rows": 1069,
+   "description": "Current inventory quantity of each product per location (shelf/bin)."
+  },
+  {
+   "id": "Production__ProductListPriceHistory",
+   "type": "table",
+   "domain": "Production",
+   "rows": 395,
+   "description": "History of product list prices (StartDate/EndDate; EndDate NULL = current)."
+  },
+  {
+   "id": "Production__ProductModel",
+   "type": "table",
+   "domain": "Production",
+   "rows": 128,
+   "description": "Product models: a model groups product variants (sizes/colors), e.g. 'Mountain-100'."
+  },
+  {
+   "id": "Production__ProductModelIllustration",
+   "type": "table",
+   "domain": "Production",
+   "rows": 7,
+   "description": "Cross-reference mapping product models to illustrations."
+  },
+  {
+   "id": "Production__ProductModelProductDescriptionCulture",
+   "type": "table",
+   "domain": "Production",
+   "rows": 762,
+   "description": "Cross-reference mapping product models to their descriptions per language (CultureID is space padded, e.g. 'en    ')."
+  },
+  {
+   "id": "Production__ProductPhoto",
+   "type": "table",
+   "domain": "Production",
+   "rows": 101,
+   "description": "Product images (thumbnail and large photo blobs)."
+  },
+  {
+   "id": "Production__ProductProductPhoto",
+   "type": "table",
+   "domain": "Production",
+   "rows": 504,
+   "description": "Cross-reference mapping products to their photos."
+  },
+  {
+   "id": "Production__ProductReview",
+   "type": "table",
+   "domain": "Production",
+   "rows": 4,
+   "description": "Customer reviews of products."
+  },
+  {
+   "id": "Production__ProductSubcategory",
+   "type": "table",
+   "domain": "Production",
+   "rows": 37,
+   "description": "Second level of the product hierarchy (e.g. Mountain Bikes, Road Bikes, Helmets, Jerseys). Each belongs to one ProductCategory."
+  },
+  {
+   "id": "Production__ScrapReason",
+   "type": "table",
+   "domain": "Production",
+   "rows": 16,
+   "description": "Manufacturing failure (scrap) reasons."
+  },
+  {
+   "id": "Production__TransactionHistory",
+   "type": "table",
+   "domain": "Production",
+   "rows": 113443,
+   "description": "Inventory transactions (sales, purchases, work orders) from 2024-07-30 onward. Older transactions are in Production__TransactionHistoryArchive; UNION ALL both for full history."
+  },
+  {
+   "id": "Production__TransactionHistoryArchive",
+   "type": "table",
+   "domain": "Production",
+   "rows": 89253,
+   "description": "Inventory transactions before 2024-07-30 (archive of Production__TransactionHistory, same columns)."
+  },
+  {
+   "id": "Production__UnitMeasure",
+   "type": "table",
+   "domain": "Production",
+   "rows": 38,
+   "description": "Unit of measure lookup. Codes are space padded to 3 characters ('EA ', 'LB ', 'CM ')."
+  },
+  {
+   "id": "Production__WorkOrder",
+   "type": "table",
+   "domain": "Production",
+   "rows": 72591,
+   "description": "Manufacturing work orders: product, quantity to build, scrapped quantity and dates."
+  },
+  {
+   "id": "Production__WorkOrderRouting",
+   "type": "table",
+   "domain": "Production",
+   "rows": 67131,
+   "description": "Manufacturing steps (routing) of each work order: location, planned vs actual dates, hours and cost."
+  },
+  {
+   "id": "Purchasing__ProductVendor",
+   "type": "table",
+   "domain": "Purchasing",
+   "rows": 460,
+   "description": "Which vendors supply which products, with lead time, prices and order quantity limits."
+  },
+  {
+   "id": "Purchasing__PurchaseOrderDetail",
+   "type": "table",
+   "domain": "Purchasing",
+   "rows": 8845,
+   "description": "Purchase order lines (products ordered from vendors)."
+  },
+  {
+   "id": "Purchasing__PurchaseOrderHeader",
+   "type": "table",
+   "domain": "Purchasing",
+   "rows": 4012,
+   "description": "Purchase orders to vendors: vendor, employee who created it, status, dates, shipping and totals."
+  },
+  {
+   "id": "Purchasing__ShipMethod",
+   "type": "table",
+   "domain": "Purchasing",
+   "rows": 5,
+   "description": "Shipping companies/methods used for sales and purchase orders."
+  },
+  {
+   "id": "Purchasing__Vendor",
+   "type": "table",
+   "domain": "Purchasing",
+   "rows": 104,
+   "description": "Companies from which Adventure Works purchases parts and other goods."
+  },
+  {
+   "id": "Sales__CountryRegionCurrency",
+   "type": "table",
+   "domain": "Sales",
+   "rows": 109,
+   "description": "Cross-reference mapping countries/regions to their ISO currency codes."
+  },
+  {
+   "id": "Sales__CreditCard",
+   "type": "table",
+   "domain": "Sales",
+   "rows": 19118,
+   "description": "Customer credit card information."
+  },
+  {
+   "id": "Sales__Currency",
+   "type": "table",
+   "domain": "Sales",
+   "rows": 105,
+   "description": "Lookup of ISO currency codes and names."
+  },
+  {
+   "id": "Sales__CurrencyRate",
+   "type": "table",
+   "domain": "Sales",
+   "rows": 13532,
+   "description": "Daily currency exchange rates from USD to other currencies."
+  },
+  {
+   "id": "Sales__Customer",
+   "type": "table",
+   "domain": "Sales",
+   "rows": 19820,
+   "description": "Customers. A customer is either an individual consumer (PersonID set, StoreID NULL) or a reseller store (StoreID set; PersonID is then the store contact, if any)."
+  },
+  {
+   "id": "Sales__PersonCreditCard",
+   "type": "table",
+   "domain": "Sales",
+   "rows": 19118,
+   "description": "Cross-reference mapping people to their credit cards."
+  },
+  {
+   "id": "Sales__SalesOrderDetail",
+   "type": "table",
+   "domain": "Sales",
+   "rows": 121317,
+   "description": "Individual products (order lines) of each sales order: product, quantity, unit price, discount and line total."
+  },
+  {
+   "id": "Sales__SalesOrderHeader",
+   "type": "table",
+   "domain": "Sales",
+   "rows": 31465,
+   "description": "General sales order information: one row per customer order, with dates, customer, channel, sales person, territory, addresses, payment and order totals."
+  },
+  {
+   "id": "Sales__SalesOrderHeaderSalesReason",
+   "type": "table",
+   "domain": "Sales",
+   "rows": 27647,
+   "description": "Cross-reference mapping sales orders to the purchase reasons given (online orders)."
+  },
+  {
+   "id": "Sales__SalesPerson",
+   "type": "table",
+   "domain": "Sales",
+   "rows": 17,
+   "description": "Sales representatives (employees) with their territory, quota, bonus, commission and year-to-date sales. Names are in Person__Person (same BusinessEntityID)."
+  },
+  {
+   "id": "Sales__SalesPersonQuotaHistory",
+   "type": "table",
+   "domain": "Sales",
+   "rows": 163,
+   "description": "Sales quota history per sales person and quota date (quarterly quotas)."
+  },
+  {
+   "id": "Sales__SalesReason",
+   "type": "table",
+   "domain": "Sales",
+   "rows": 10,
+   "description": "Lookup of reasons customers give for a purchase (price, promotion, advertising, quality, ...)."
+  },
+  {
+   "id": "Sales__SalesTaxRate",
+   "type": "table",
+   "domain": "Sales",
+   "rows": 29,
+   "description": "Tax rates per state/province."
+  },
+  {
+   "id": "Sales__SalesTerritory",
+   "type": "table",
+   "domain": "Sales",
+   "rows": 10,
+   "description": "Sales territories: 5 US regions (Northwest, Northeast, Central, Southwest, Southeast) plus Canada, France, Germany, Australia and United Kingdom, grouped into North America, Europe and Pacific."
+  },
+  {
+   "id": "Sales__SalesTerritoryHistory",
+   "type": "table",
+   "domain": "Sales",
+   "rows": 17,
+   "description": "History of sales person assignments to territories (StartDate/EndDate; EndDate NULL = current)."
+  },
+  {
+   "id": "Sales__ShoppingCartItem",
+   "type": "table",
+   "domain": "Sales",
+   "rows": 3,
+   "description": "Online shopping cart contents until the order is submitted or cancelled (only test rows here)."
+  },
+  {
+   "id": "Sales__SpecialOffer",
+   "type": "table",
+   "domain": "Sales",
+   "rows": 16,
+   "description": "Promotions and discounts (volume discounts, seasonal sales, clearance, etc.)."
+  },
+  {
+   "id": "Sales__SpecialOfferProduct",
+   "type": "table",
+   "domain": "Sales",
+   "rows": 538,
+   "description": "Cross-reference of which products are eligible for which special offers."
+  },
+  {
+   "id": "Sales__Store",
+   "type": "table",
+   "domain": "Sales",
+   "rows": 701,
+   "description": "Reseller customers: bike shops that buy Adventure Works products for resale."
+  },
+  {
+   "id": "domain:HumanResources",
+   "type": "domain",
+   "description": "Employees, departments, department/shift history, pay history and job candidates."
+  },
+  {
+   "id": "domain:Person",
+   "type": "domain",
+   "description": "People and business entities with their addresses, e-mail, phones, contact roles, countries and states/provinces."
+  },
+  {
+   "id": "domain:Production",
+   "type": "domain",
+   "description": "Products and their category hierarchy, models, descriptions and photos, bill of materials, inventory, work orders/routing (manufacturing), cost/price history and inventory transactions."
+  },
+  {
+   "id": "domain:Purchasing",
+   "type": "domain",
+   "description": "Vendors, the products they supply, purchase orders and shipping methods."
+  },
+  {
+   "id": "domain:Sales",
+   "type": "domain",
+   "description": "Customers (individuals and reseller stores), sales orders and lines, sales people and quotas, territories, special offers, currencies, credit cards and sales tax."
+  },
+  {
+   "id": "domain:dbo",
+   "type": "domain",
+   "description": "Technical tables: build version, DDL audit log and error log. Not business data."
+  },
+  {
+   "id": "metric:Sales revenue",
+   "type": "metric",
+   "description": "Net sales excluding tax and freight. Order level: SUM(SubTotal). Line level (by product): SUM(LineTotal) - both give the same total."
+  },
+  {
+   "id": "metric:Gross billed amount",
+   "type": "metric",
+   "description": "Amount invoiced to customers including tax and freight."
+  },
+  {
+   "id": "metric:Order count",
+   "type": "metric",
+   "description": "Number of sales orders."
+  },
+  {
+   "id": "metric:Units sold",
+   "type": "metric",
+   "description": "Number of product units sold."
+  },
+  {
+   "id": "metric:Average order value",
+   "type": "metric",
+   "description": "Net sales revenue divided by number of orders."
+  },
+  {
+   "id": "metric:Discount amount",
+   "type": "metric",
+   "description": "Value of price discounts granted on order lines."
+  },
+  {
+   "id": "metric:Gross margin",
+   "type": "metric",
+   "description": "Approximate: line revenue minus quantity x current standard cost. For period-accurate cost use Production__ProductCostHistory."
+  },
+  {
+   "id": "metric:Purchase spend",
+   "type": "metric",
+   "description": "Amount ordered from vendors excluding tax and freight; usually exclude rejected orders (Status = 3)."
+  },
+  {
+   "id": "metric:Inventory on hand",
+   "type": "metric",
+   "description": "Units currently in stock, summed over all locations."
+  },
+  {
+   "id": "metric:Scrap rate",
+   "type": "metric",
+   "description": "Share of work-order quantity that failed inspection."
+  },
+  {
+   "id": "metric:Quota attainment",
+   "type": "metric",
+   "description": "Sales person year-to-date sales divided by their sales quota."
+  },
+  {
+   "id": "term:Individual customer",
+   "type": "term",
+   "description": "A Sales__Customer with PersonID set and StoreID NULL (Person__Person.PersonType = 'IN'). Buys online (OnlineOrderFlag = '1')."
+  },
+  {
+   "id": "term:Reseller",
+   "type": "term",
+   "description": "A Sales__Customer with StoreID set; the store name is Sales__Store.Name. Reseller orders are placed by a sales person (OnlineOrderFlag = '0')."
+  },
+  {
+   "id": "term:Sales channel",
+   "type": "term",
+   "description": "Online/internet channel = OnlineOrderFlag = '1' (individual customers, no sales person). Reseller channel = OnlineOrderFlag = '0' (stores, with SalesPersonID)."
+  },
+  {
+   "id": "term:Product hierarchy",
+   "type": "term",
+   "description": "Production__ProductCategory (Bikes, Components, Clothing, Accessories) -> Production__ProductSubcategory -> Production__Product. Products without a subcategory are internal components."
+  },
+  {
+   "id": "term:Region / territory group",
+   "type": "term",
+   "description": "Sales__SalesTerritory.\"Group\" groups territories into North America, Europe and Pacific; Name is the territory (5 US regions or a country)."
+  },
+  {
+   "id": "term:Current department",
+   "type": "term",
+   "description": "The HumanResources__EmployeeDepartmentHistory row with EndDate IS NULL."
+  },
+  {
+   "id": "term:Current pay rate",
+   "type": "term",
+   "description": "Per employee, the HumanResources__EmployeePayHistory row with the latest RateChangeDate (ROW_NUMBER() OVER (PARTITION BY BusinessEntityID ORDER BY RateChangeDate DESC) = 1)."
+  },
+  {
+   "id": "term:Full inventory transaction history",
+   "type": "term",
+   "description": "Production__TransactionHistory holds transactions from 2024-07-30; Production__TransactionHistoryArchive holds earlier ones. UNION ALL both tables for complete history."
+  },
+  {
+   "id": "term:Finished good",
+   "type": "term",
+   "description": "Product with FinishedGoodsFlag = '1'. MakeFlag = '1' means manufactured in-house, '0' purchased."
+  },
+  {
+   "id": "term:Active product",
+   "type": "term",
+   "description": "Product still for sale: SellEndDate IS NULL and DiscontinuedDate IS NULL."
+  },
+  {
+   "id": "entity:Business Entity",
+   "type": "entity",
+   "kind": "core",
+   "description": "Shared identity (BusinessEntityID) of every person, store and vendor; addresses and contacts hang off it.",
+   "synonyms": [
+    "party",
+    "legal entity"
+   ],
+   "table": "Person__BusinessEntity",
+   "filter": null,
+   "key": [
+    "BusinessEntityID"
+   ],
+   "label": [],
+   "rows": 20777
+  },
+  {
+   "id": "entity:Person",
+   "type": "entity",
+   "kind": "core",
+   "description": "Any human known to Adventure Works: employees, sales people, individual customers and store/vendor contacts.",
+   "synonyms": [
+    "people",
+    "individual",
+    "contact"
+   ],
+   "table": "Person__Person",
+   "filter": null,
+   "key": [
+    "BusinessEntityID"
+   ],
+   "label": [
+    "FirstName",
+    "LastName"
+   ],
+   "rows": 19972
+  },
+  {
+   "id": "entity:Store Contact",
+   "type": "entity",
+   "kind": "role",
+   "description": "Person who is the contact for a reseller store.",
+   "synonyms": [
+    "store representative"
+   ],
+   "table": "Person__Person",
+   "filter": "PersonType = 'SC'",
+   "key": [
+    "BusinessEntityID"
+   ],
+   "label": [
+    "FirstName",
+    "LastName"
+   ],
+   "rows": 753
+  },
+  {
+   "id": "entity:Vendor Contact",
+   "type": "entity",
+   "kind": "role",
+   "description": "Person who is the contact for a vendor.",
+   "synonyms": [
+    "supplier contact"
+   ],
+   "table": "Person__Person",
+   "filter": "PersonType = 'VC'",
+   "key": [
+    "BusinessEntityID"
+   ],
+   "label": [
+    "FirstName",
+    "LastName"
+   ],
+   "rows": 156
+  },
+  {
+   "id": "entity:Address",
+   "type": "entity",
+   "kind": "core",
+   "description": "Street address of a person, store or vendor; also used as bill-to/ship-to address of orders.",
+   "synonyms": [
+    "location address",
+    "street address"
+   ],
+   "table": "Person__Address",
+   "filter": null,
+   "key": [
+    "AddressID"
+   ],
+   "label": [
+    "AddressLine1",
+    "City"
+   ],
+   "rows": 19614
+  },
+  {
+   "id": "entity:State or Province",
+   "type": "entity",
+   "kind": "reference",
+   "description": "State, province or region of a country, mapped to a sales territory.",
+   "synonyms": [
+    "state",
+    "province",
+    "region"
+   ],
+   "table": "Person__StateProvince",
+   "filter": null,
+   "key": [
+    "StateProvinceID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 181
+  },
+  {
+   "id": "entity:Country",
+   "type": "entity",
+   "kind": "reference",
+   "description": "Country or region (ISO code and name).",
+   "synonyms": [
+    "nation",
+    "country region"
+   ],
+   "table": "Person__CountryRegion",
+   "filter": null,
+   "key": [
+    "CountryRegionCode"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 238
+  },
+  {
+   "id": "entity:Contact Type",
+   "type": "entity",
+   "kind": "reference",
+   "description": "Role a contact person plays for a store or vendor (owner, purchasing agent, ...).",
+   "synonyms": [
+    "contact role"
+   ],
+   "table": "Person__ContactType",
+   "filter": null,
+   "key": [
+    "ContactTypeID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 20
+  },
+  {
+   "id": "entity:Employee",
+   "type": "entity",
+   "kind": "core",
+   "description": "Adventure Works employee with job title, hire date and HR details; the name is in Person.",
+   "synonyms": [
+    "staff",
+    "worker",
+    "personnel",
+    "headcount"
+   ],
+   "table": "HumanResources__Employee",
+   "filter": null,
+   "key": [
+    "BusinessEntityID"
+   ],
+   "label": [],
+   "rows": 290
+  },
+  {
+   "id": "entity:Department",
+   "type": "entity",
+   "kind": "reference",
+   "description": "Company department, grouped into department groups.",
+   "synonyms": [
+    "team",
+    "org unit"
+   ],
+   "table": "HumanResources__Department",
+   "filter": null,
+   "key": [
+    "DepartmentID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 16
+  },
+  {
+   "id": "entity:Shift",
+   "type": "entity",
+   "kind": "reference",
+   "description": "Work shift (day, evening, night).",
+   "synonyms": [
+    "work shift"
+   ],
+   "table": "HumanResources__Shift",
+   "filter": null,
+   "key": [
+    "ShiftID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 3
+  },
+  {
+   "id": "entity:Pay Rate Change",
+   "type": "entity",
+   "kind": "event",
+   "description": "An employee's hourly pay rate from a given date; the latest one is the current rate.",
+   "synonyms": [
+    "salary",
+    "wage",
+    "pay history",
+    "compensation"
+   ],
+   "table": "HumanResources__EmployeePayHistory",
+   "filter": null,
+   "key": [
+    "BusinessEntityID",
+    "RateChangeDate"
+   ],
+   "label": [],
+   "rows": 316
+  },
+  {
+   "id": "entity:Job Candidate",
+   "type": "entity",
+   "kind": "core",
+   "description": "Job applicant with a resume; linked to the employee record when hired.",
+   "synonyms": [
+    "applicant",
+    "candidate"
+   ],
+   "table": "HumanResources__JobCandidate",
+   "filter": null,
+   "key": [
+    "JobCandidateID"
+   ],
+   "label": [],
+   "rows": 13
+  },
+  {
+   "id": "entity:Customer",
+   "type": "entity",
+   "kind": "core",
+   "description": "A buyer of Adventure Works products: an individual consumer or a reseller store account.",
+   "synonyms": [
+    "client",
+    "buyer",
+    "account"
+   ],
+   "table": "Sales__Customer",
+   "filter": null,
+   "key": [
+    "CustomerID"
+   ],
+   "label": [
+    "AccountNumber"
+   ],
+   "rows": 19820
+  },
+  {
+   "id": "entity:Individual Customer",
+   "type": "entity",
+   "kind": "role",
+   "description": "Consumer who buys online; the customer record points to a person and has no store.",
+   "synonyms": [
+    "consumer",
+    "retail customer",
+    "online customer",
+    "B2C customer"
+   ],
+   "table": "Sales__Customer",
+   "filter": "StoreID IS NULL",
+   "key": [
+    "CustomerID"
+   ],
+   "label": [
+    "AccountNumber"
+   ],
+   "rows": 18484
+  },
+  {
+   "id": "entity:Reseller Customer",
+   "type": "entity",
+   "kind": "role",
+   "description": "Customer account of a reseller store; its orders are taken by sales people.",
+   "synonyms": [
+    "reseller account",
+    "B2B customer",
+    "wholesale customer"
+   ],
+   "table": "Sales__Customer",
+   "filter": "StoreID IS NOT NULL",
+   "key": [
+    "CustomerID"
+   ],
+   "label": [
+    "AccountNumber"
+   ],
+   "rows": 1336
+  },
+  {
+   "id": "entity:Store",
+   "type": "entity",
+   "kind": "core",
+   "description": "Reseller: a bike shop that buys Adventure Works products for resale.",
+   "synonyms": [
+    "reseller",
+    "bike shop",
+    "dealer",
+    "retailer",
+    "shop"
+   ],
+   "table": "Sales__Store",
+   "filter": null,
+   "key": [
+    "BusinessEntityID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 701
+  },
+  {
+   "id": "entity:Sales Order",
+   "type": "entity",
+   "kind": "event",
+   "description": "A customer order with dates, channel, territory, payment and totals (SubTotal = net revenue).",
+   "synonyms": [
+    "order",
+    "sale",
+    "invoice",
+    "purchase"
+   ],
+   "table": "Sales__SalesOrderHeader",
+   "filter": null,
+   "key": [
+    "SalesOrderID"
+   ],
+   "label": [
+    "SalesOrderNumber"
+   ],
+   "rows": 31465
+  },
+  {
+   "id": "entity:Online Order",
+   "type": "entity",
+   "kind": "role",
+   "description": "Sales order placed on the internet by an individual customer.",
+   "synonyms": [
+    "internet order",
+    "web order",
+    "online sale"
+   ],
+   "table": "Sales__SalesOrderHeader",
+   "filter": "OnlineOrderFlag = '1'",
+   "key": [
+    "SalesOrderID"
+   ],
+   "label": [
+    "SalesOrderNumber"
+   ],
+   "rows": 27659
+  },
+  {
+   "id": "entity:Reseller Order",
+   "type": "entity",
+   "kind": "role",
+   "description": "Sales order placed by a sales person for a reseller store.",
+   "synonyms": [
+    "reseller sale",
+    "B2B order"
+   ],
+   "table": "Sales__SalesOrderHeader",
+   "filter": "OnlineOrderFlag = '0'",
+   "key": [
+    "SalesOrderID"
+   ],
+   "label": [
+    "SalesOrderNumber"
+   ],
+   "rows": 3806
+  },
+  {
+   "id": "entity:Sales Order Line",
+   "type": "entity",
+   "kind": "event",
+   "description": "One product on a sales order with quantity, unit price, discount and line total.",
+   "synonyms": [
+    "order line",
+    "line item",
+    "order item"
+   ],
+   "table": "Sales__SalesOrderDetail",
+   "filter": null,
+   "key": [
+    "SalesOrderDetailID"
+   ],
+   "label": [],
+   "rows": 121317
+  },
+  {
+   "id": "entity:Sales Person",
+   "type": "entity",
+   "kind": "role",
+   "description": "Employee who sells to resellers, with territory, quota, bonus, commission and year-to-date sales.",
+   "synonyms": [
+    "sales rep",
+    "sales representative",
+    "account manager"
+   ],
+   "table": "Sales__SalesPerson",
+   "filter": null,
+   "key": [
+    "BusinessEntityID"
+   ],
+   "label": [],
+   "rows": 17
+  },
+  {
+   "id": "entity:Sales Territory",
+   "type": "entity",
+   "kind": "reference",
+   "description": "Sales region (five US regions or a country) grouped into North America, Europe and Pacific.",
+   "synonyms": [
+    "territory",
+    "sales region",
+    "market"
+   ],
+   "table": "Sales__SalesTerritory",
+   "filter": null,
+   "key": [
+    "TerritoryID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 10
+  },
+  {
+   "id": "entity:Sales Quota",
+   "type": "entity",
+   "kind": "event",
+   "description": "Quarterly sales quota of a sales person.",
+   "synonyms": [
+    "quota",
+    "sales target"
+   ],
+   "table": "Sales__SalesPersonQuotaHistory",
+   "filter": null,
+   "key": [
+    "BusinessEntityID",
+    "QuotaDate"
+   ],
+   "label": [],
+   "rows": 163
+  },
+  {
+   "id": "entity:Special Offer",
+   "type": "entity",
+   "kind": "reference",
+   "description": "Promotion or discount (volume discount, seasonal sale, clearance) for resellers or customers.",
+   "synonyms": [
+    "promotion",
+    "discount",
+    "deal"
+   ],
+   "table": "Sales__SpecialOffer",
+   "filter": null,
+   "key": [
+    "SpecialOfferID"
+   ],
+   "label": [
+    "Description"
+   ],
+   "rows": 16
+  },
+  {
+   "id": "entity:Sales Reason",
+   "type": "entity",
+   "kind": "reference",
+   "description": "Reason a customer gives for buying (price, promotion, advertising, quality ...).",
+   "synonyms": [
+    "purchase reason",
+    "buying motive"
+   ],
+   "table": "Sales__SalesReason",
+   "filter": null,
+   "key": [
+    "SalesReasonID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 10
+  },
+  {
+   "id": "entity:Credit Card",
+   "type": "entity",
+   "kind": "core",
+   "description": "Payment card used for sales orders.",
+   "synonyms": [
+    "payment card",
+    "card"
+   ],
+   "table": "Sales__CreditCard",
+   "filter": null,
+   "key": [
+    "CreditCardID"
+   ],
+   "label": [
+    "CardType"
+   ],
+   "rows": 19118
+  },
+  {
+   "id": "entity:Currency",
+   "type": "entity",
+   "kind": "reference",
+   "description": "ISO currency.",
+   "synonyms": [
+    "money",
+    "currency code"
+   ],
+   "table": "Sales__Currency",
+   "filter": null,
+   "key": [
+    "CurrencyCode"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 105
+  },
+  {
+   "id": "entity:Currency Rate",
+   "type": "entity",
+   "kind": "reference",
+   "description": "Daily exchange rate from US dollars to another currency.",
+   "synonyms": [
+    "exchange rate",
+    "fx rate"
+   ],
+   "table": "Sales__CurrencyRate",
+   "filter": null,
+   "key": [
+    "CurrencyRateID"
+   ],
+   "label": [],
+   "rows": 13532
+  },
+  {
+   "id": "entity:Sales Tax Rate",
+   "type": "entity",
+   "kind": "reference",
+   "description": "Sales tax rate of a state or province (retail, wholesale or all sales).",
+   "synonyms": [
+    "tax rate",
+    "sales tax"
+   ],
+   "table": "Sales__SalesTaxRate",
+   "filter": null,
+   "key": [
+    "SalesTaxRateID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 29
+  },
+  {
+   "id": "entity:Product",
+   "type": "entity",
+   "kind": "core",
+   "description": "Something sold or used in manufacturing: bikes, components, clothing and accessories.",
+   "synonyms": [
+    "item",
+    "SKU",
+    "part",
+    "merchandise",
+    "bike"
+   ],
+   "table": "Production__Product",
+   "filter": null,
+   "key": [
+    "ProductID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 504
+  },
+  {
+   "id": "entity:Finished Good",
+   "type": "entity",
+   "kind": "role",
+   "description": "Product that is salable (FinishedGoodsFlag = 1).",
+   "synonyms": [
+    "salable product",
+    "sellable product"
+   ],
+   "table": "Production__Product",
+   "filter": "FinishedGoodsFlag = '1'",
+   "key": [
+    "ProductID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 295
+  },
+  {
+   "id": "entity:Manufactured Product",
+   "type": "entity",
+   "kind": "role",
+   "description": "Product made in-house (MakeFlag = 1).",
+   "synonyms": [
+    "in-house product",
+    "made product"
+   ],
+   "table": "Production__Product",
+   "filter": "MakeFlag = '1'",
+   "key": [
+    "ProductID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 239
+  },
+  {
+   "id": "entity:Purchased Product",
+   "type": "entity",
+   "kind": "role",
+   "description": "Product bought from vendors rather than made (MakeFlag = 0).",
+   "synonyms": [
+    "bought-in part",
+    "purchased part"
+   ],
+   "table": "Production__Product",
+   "filter": "MakeFlag = '0'",
+   "key": [
+    "ProductID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 265
+  },
+  {
+   "id": "entity:Product Category",
+   "type": "entity",
+   "kind": "reference",
+   "description": "Top level of the product hierarchy: Bikes, Components, Clothing, Accessories.",
+   "synonyms": [
+    "category"
+   ],
+   "table": "Production__ProductCategory",
+   "filter": null,
+   "key": [
+    "ProductCategoryID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 4
+  },
+  {
+   "id": "entity:Product Subcategory",
+   "type": "entity",
+   "kind": "reference",
+   "description": "Second level of the product hierarchy (Mountain Bikes, Helmets, Jerseys, ...).",
+   "synonyms": [
+    "subcategory",
+    "product type"
+   ],
+   "table": "Production__ProductSubcategory",
+   "filter": null,
+   "key": [
+    "ProductSubcategoryID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 37
+  },
+  {
+   "id": "entity:Product Model",
+   "type": "entity",
+   "kind": "core",
+   "description": "Product model that groups product variants (sizes, colors), e.g. Mountain-100.",
+   "synonyms": [
+    "model",
+    "product family"
+   ],
+   "table": "Production__ProductModel",
+   "filter": null,
+   "key": [
+    "ProductModelID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 128
+  },
+  {
+   "id": "entity:Product Description",
+   "type": "entity",
+   "kind": "reference",
+   "description": "Marketing description of a product model in one language.",
+   "synonyms": [
+    "description",
+    "marketing text"
+   ],
+   "table": "Production__ProductDescription",
+   "filter": null,
+   "key": [
+    "ProductDescriptionID"
+   ],
+   "label": [
+    "Description"
+   ],
+   "rows": 762
+  },
+  {
+   "id": "entity:Language",
+   "type": "entity",
+   "kind": "reference",
+   "description": "Language (culture) in which product descriptions are written.",
+   "synonyms": [
+    "culture",
+    "locale"
+   ],
+   "table": "Production__Culture",
+   "filter": null,
+   "key": [
+    "CultureID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 8
+  },
+  {
+   "id": "entity:Product Review",
+   "type": "entity",
+   "kind": "event",
+   "description": "Customer review of a product with a 1-5 rating.",
+   "synonyms": [
+    "review",
+    "rating",
+    "feedback"
+   ],
+   "table": "Production__ProductReview",
+   "filter": null,
+   "key": [
+    "ProductReviewID"
+   ],
+   "label": [
+    "ReviewerName"
+   ],
+   "rows": 4
+  },
+  {
+   "id": "entity:Location",
+   "type": "entity",
+   "kind": "reference",
+   "description": "Inventory or manufacturing location (work center or storage area).",
+   "synonyms": [
+    "work center",
+    "warehouse location",
+    "storage area"
+   ],
+   "table": "Production__Location",
+   "filter": null,
+   "key": [
+    "LocationID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 14
+  },
+  {
+   "id": "entity:Work Order",
+   "type": "entity",
+   "kind": "event",
+   "description": "Manufacturing order to build a quantity of a product, with scrapped quantity and dates.",
+   "synonyms": [
+    "production order",
+    "manufacturing order",
+    "job"
+   ],
+   "table": "Production__WorkOrder",
+   "filter": null,
+   "key": [
+    "WorkOrderID"
+   ],
+   "label": [],
+   "rows": 72591
+  },
+  {
+   "id": "entity:Work Order Operation",
+   "type": "entity",
+   "kind": "event",
+   "description": "Manufacturing step of a work order at a location, with planned vs actual dates, hours and cost.",
+   "synonyms": [
+    "routing step",
+    "operation",
+    "manufacturing step"
+   ],
+   "table": "Production__WorkOrderRouting",
+   "filter": null,
+   "key": [
+    "WorkOrderID",
+    "ProductID",
+    "OperationSequence"
+   ],
+   "label": [],
+   "rows": 67131
+  },
+  {
+   "id": "entity:Scrap Reason",
+   "type": "entity",
+   "kind": "reference",
+   "description": "Reason a manufactured quantity failed inspection.",
+   "synonyms": [
+    "defect reason",
+    "failure reason"
+   ],
+   "table": "Production__ScrapReason",
+   "filter": null,
+   "key": [
+    "ScrapReasonID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 16
+  },
+  {
+   "id": "entity:Inventory Transaction",
+   "type": "entity",
+   "kind": "event",
+   "description": "Stock movement from a sales order, purchase order or work order since 2024-07-30.",
+   "synonyms": [
+    "stock movement",
+    "inventory movement"
+   ],
+   "table": "Production__TransactionHistory",
+   "filter": null,
+   "key": [
+    "TransactionID"
+   ],
+   "label": [],
+   "rows": 113443
+  },
+  {
+   "id": "entity:Archived Inventory Transaction",
+   "type": "entity",
+   "kind": "event",
+   "description": "Stock movement before 2024-07-30 (archive of inventory transactions).",
+   "synonyms": [
+    "old inventory transaction",
+    "transaction archive"
+   ],
+   "table": "Production__TransactionHistoryArchive",
+   "filter": null,
+   "key": [
+    "TransactionID"
+   ],
+   "label": [],
+   "rows": 89253
+  },
+  {
+   "id": "entity:Document",
+   "type": "entity",
+   "kind": "core",
+   "description": "Product maintenance document or folder, owned by an employee.",
+   "synonyms": [
+    "manual",
+    "guide",
+    "product document"
+   ],
+   "table": "Production__Document",
+   "filter": null,
+   "key": [
+    "DocumentNode"
+   ],
+   "label": [
+    "Title"
+   ],
+   "rows": 12
+  },
+  {
+   "id": "entity:Product Cost History",
+   "type": "entity",
+   "kind": "event",
+   "description": "Standard cost of a product for a period (EndDate NULL = current).",
+   "synonyms": [
+    "cost history",
+    "standard cost history"
+   ],
+   "table": "Production__ProductCostHistory",
+   "filter": null,
+   "key": [
+    "ProductID",
+    "StartDate"
+   ],
+   "label": [],
+   "rows": 395
+  },
+  {
+   "id": "entity:Product List Price History",
+   "type": "entity",
+   "kind": "event",
+   "description": "List price of a product for a period (EndDate NULL = current).",
+   "synonyms": [
+    "price history",
+    "list price history"
+   ],
+   "table": "Production__ProductListPriceHistory",
+   "filter": null,
+   "key": [
+    "ProductID",
+    "StartDate"
+   ],
+   "label": [],
+   "rows": 395
+  },
+  {
+   "id": "entity:Vendor",
+   "type": "entity",
+   "kind": "core",
+   "description": "Company Adventure Works buys parts and goods from.",
+   "synonyms": [
+    "supplier",
+    "manufacturer"
+   ],
+   "table": "Purchasing__Vendor",
+   "filter": null,
+   "key": [
+    "BusinessEntityID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 104
+  },
+  {
+   "id": "entity:Preferred Vendor",
+   "type": "entity",
+   "kind": "role",
+   "description": "Vendor preferred over others that supply the same product.",
+   "synonyms": [
+    "preferred supplier"
+   ],
+   "table": "Purchasing__Vendor",
+   "filter": "PreferredVendorStatus = '1'",
+   "key": [
+    "BusinessEntityID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 93
+  },
+  {
+   "id": "entity:Purchase Order",
+   "type": "entity",
+   "kind": "event",
+   "description": "Order placed with a vendor by an employee, with status, dates and totals.",
+   "synonyms": [
+    "PO",
+    "procurement order",
+    "purchase"
+   ],
+   "table": "Purchasing__PurchaseOrderHeader",
+   "filter": null,
+   "key": [
+    "PurchaseOrderID"
+   ],
+   "label": [],
+   "rows": 4012
+  },
+  {
+   "id": "entity:Purchase Order Line",
+   "type": "entity",
+   "kind": "event",
+   "description": "One product ordered from a vendor with ordered, received, rejected and stocked quantities.",
+   "synonyms": [
+    "PO line",
+    "purchase line"
+   ],
+   "table": "Purchasing__PurchaseOrderDetail",
+   "filter": null,
+   "key": [
+    "PurchaseOrderDetailID"
+   ],
+   "label": [],
+   "rows": 8845
+  },
+  {
+   "id": "entity:Ship Method",
+   "type": "entity",
+   "kind": "reference",
+   "description": "Shipping company/method used for sales and purchase orders.",
+   "synonyms": [
+    "shipping method",
+    "carrier",
+    "shipper"
+   ],
+   "table": "Purchasing__ShipMethod",
+   "filter": null,
+   "key": [
+    "ShipMethodID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 5
+  },
+  {
+   "id": "entity:Product Photo",
+   "type": "entity",
+   "kind": "core",
+   "description": "Product image files, including thumbnail and large-photo filenames.",
+   "synonyms": [
+    "Product Image"
+   ],
+   "table": "Production__ProductPhoto",
+   "filter": null,
+   "key": [
+    "ProductPhotoID"
+   ],
+   "label": [
+    "ThumbnailPhotoFileName"
+   ],
+   "rows": 101
+  },
+  {
+   "id": "entity:Illustration",
+   "type": "entity",
+   "kind": "core",
+   "description": "Bicycle assembly diagram stored as XML.",
+   "synonyms": [
+    "Assembly Diagram"
+   ],
+   "table": "Production__Illustration",
+   "filter": null,
+   "key": [
+    "IllustrationID"
+   ],
+   "label": [],
+   "rows": 5
+  },
+  {
+   "id": "entity:Unit of Measure",
+   "type": "entity",
+   "kind": "reference",
+   "description": "Measurement units used for product dimensions, quantities and vendor supply units.",
+   "synonyms": [
+    "Unit Measure"
+   ],
+   "table": "Production__UnitMeasure",
+   "filter": null,
+   "key": [
+    "UnitMeasureCode"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 38
+  },
+  {
+   "id": "entity:Address Type",
+   "type": "entity",
+   "kind": "reference",
+   "description": "Role of a business entity address, such as billing, shipping or home.",
+   "synonyms": [],
+   "table": "Person__AddressType",
+   "filter": null,
+   "key": [
+    "AddressTypeID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 6
+  },
+  {
+   "id": "entity:Phone Number Type",
+   "type": "entity",
+   "kind": "reference",
+   "description": "Type of a person's phone number, such as work, home or cell.",
+   "synonyms": [
+    "Phone Type"
+   ],
+   "table": "Person__PhoneNumberType",
+   "filter": null,
+   "key": [
+    "PhoneNumberTypeID"
+   ],
+   "label": [
+    "Name"
+   ],
+   "rows": 3
+  },
+  {
+   "id": "entity:Email Address",
+   "type": "entity",
+   "kind": "core",
+   "description": "Email address associated with a person.",
+   "synonyms": [
+    "Person Email"
+   ],
+   "table": "Person__EmailAddress",
+   "filter": null,
+   "key": [
+    "EmailAddressID"
+   ],
+   "label": [
+    "EmailAddress"
+   ],
+   "rows": 19972
+  },
+  {
+   "id": "entity:Product Inventory",
+   "type": "entity",
+   "kind": "core",
+   "description": "On-hand product quantity at a specific manufacturing or storage location and shelf/bin.",
+   "synonyms": [
+    "Inventory Stock"
+   ],
+   "table": "Production__ProductInventory",
+   "filter": null,
+   "key": [
+    "ProductID",
+    "LocationID"
+   ],
+   "label": [],
+   "rows": 1069
+  },
+  {
+   "id": "entity:Shopping Cart Item",
+   "type": "entity",
+   "kind": "event",
+   "description": "Product and quantity held in an online shopping cart before order submission or cancellation.",
+   "synonyms": [
+    "Cart Item"
+   ],
+   "table": "Sales__ShoppingCartItem",
+   "filter": null,
+   "key": [
+    "ShoppingCartItemID"
+   ],
+   "label": [],
+   "rows": 3
+  }
+ ],
+ "edges": [
+  {
+   "source": "dbo__AWBuildVersion",
+   "target": "domain:dbo",
+   "type": "in_domain"
+  },
+  {
+   "source": "dbo__DatabaseLog",
+   "target": "domain:dbo",
+   "type": "in_domain"
+  },
+  {
+   "source": "dbo__ErrorLog",
+   "target": "domain:dbo",
+   "type": "in_domain"
+  },
+  {
+   "source": "HumanResources__Department",
+   "target": "domain:HumanResources",
+   "type": "in_domain"
+  },
+  {
+   "source": "HumanResources__Employee",
+   "target": "domain:HumanResources",
+   "type": "in_domain"
+  },
+  {
+   "source": "HumanResources__EmployeeDepartmentHistory",
+   "target": "domain:HumanResources",
+   "type": "in_domain"
+  },
+  {
+   "source": "HumanResources__EmployeePayHistory",
+   "target": "domain:HumanResources",
+   "type": "in_domain"
+  },
+  {
+   "source": "HumanResources__JobCandidate",
+   "target": "domain:HumanResources",
+   "type": "in_domain"
+  },
+  {
+   "source": "HumanResources__Shift",
+   "target": "domain:HumanResources",
+   "type": "in_domain"
+  },
+  {
+   "source": "Person__Address",
+   "target": "domain:Person",
+   "type": "in_domain"
+  },
+  {
+   "source": "Person__AddressType",
+   "target": "domain:Person",
+   "type": "in_domain"
+  },
+  {
+   "source": "Person__BusinessEntity",
+   "target": "domain:Person",
+   "type": "in_domain"
+  },
+  {
+   "source": "Person__BusinessEntityAddress",
+   "target": "domain:Person",
+   "type": "in_domain"
+  },
+  {
+   "source": "Person__BusinessEntityContact",
+   "target": "domain:Person",
+   "type": "in_domain"
+  },
+  {
+   "source": "Person__ContactType",
+   "target": "domain:Person",
+   "type": "in_domain"
+  },
+  {
+   "source": "Person__CountryRegion",
+   "target": "domain:Person",
+   "type": "in_domain"
+  },
+  {
+   "source": "Person__EmailAddress",
+   "target": "domain:Person",
+   "type": "in_domain"
+  },
+  {
+   "source": "Person__Password",
+   "target": "domain:Person",
+   "type": "in_domain"
+  },
+  {
+   "source": "Person__Person",
+   "target": "domain:Person",
+   "type": "in_domain"
+  },
+  {
+   "source": "Person__PersonPhone",
+   "target": "domain:Person",
+   "type": "in_domain"
+  },
+  {
+   "source": "Person__PhoneNumberType",
+   "target": "domain:Person",
+   "type": "in_domain"
+  },
+  {
+   "source": "Person__StateProvince",
+   "target": "domain:Person",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__BillOfMaterials",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__Culture",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__Document",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__Illustration",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__Location",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__Product",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__ProductCategory",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__ProductCostHistory",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__ProductDescription",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__ProductDocument",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__ProductInventory",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__ProductListPriceHistory",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__ProductModel",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__ProductModelIllustration",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__ProductModelProductDescriptionCulture",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__ProductPhoto",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__ProductProductPhoto",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__ProductReview",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__ProductSubcategory",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__ScrapReason",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__TransactionHistory",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__TransactionHistoryArchive",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__UnitMeasure",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__WorkOrder",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Production__WorkOrderRouting",
+   "target": "domain:Production",
+   "type": "in_domain"
+  },
+  {
+   "source": "Purchasing__ProductVendor",
+   "target": "domain:Purchasing",
+   "type": "in_domain"
+  },
+  {
+   "source": "Purchasing__PurchaseOrderDetail",
+   "target": "domain:Purchasing",
+   "type": "in_domain"
+  },
+  {
+   "source": "Purchasing__PurchaseOrderHeader",
+   "target": "domain:Purchasing",
+   "type": "in_domain"
+  },
+  {
+   "source": "Purchasing__ShipMethod",
+   "target": "domain:Purchasing",
+   "type": "in_domain"
+  },
+  {
+   "source": "Purchasing__Vendor",
+   "target": "domain:Purchasing",
+   "type": "in_domain"
+  },
+  {
+   "source": "Sales__CountryRegionCurrency",
+   "target": "domain:Sales",
+   "type": "in_domain"
+  },
+  {
+   "source": "Sales__CreditCard",
+   "target": "domain:Sales",
+   "type": "in_domain"
+  },
+  {
+   "source": "Sales__Currency",
+   "target": "domain:Sales",
+   "type": "in_domain"
+  },
+  {
+   "source": "Sales__CurrencyRate",
+   "target": "domain:Sales",
+   "type": "in_domain"
+  },
+  {
+   "source": "Sales__Customer",
+   "target": "domain:Sales",
+   "type": "in_domain"
+  },
+  {
+   "source": "Sales__PersonCreditCard",
+   "target": "domain:Sales",
+   "type": "in_domain"
+  },
+  {
+   "source": "Sales__SalesOrderDetail",
+   "target": "domain:Sales",
+   "type": "in_domain"
+  },
+  {
+   "source": "Sales__SalesOrderHeader",
+   "target": "domain:Sales",
+   "type": "in_domain"
+  },
+  {
+   "source": "Sales__SalesOrderHeaderSalesReason",
+   "target": "domain:Sales",
+   "type": "in_domain"
+  },
+  {
+   "source": "Sales__SalesPerson",
+   "target": "domain:Sales",
+   "type": "in_domain"
+  },
+  {
+   "source": "Sales__SalesPersonQuotaHistory",
+   "target": "domain:Sales",
+   "type": "in_domain"
+  },
+  {
+   "source": "Sales__SalesReason",
+   "target": "domain:Sales",
+   "type": "in_domain"
+  },
+  {
+   "source": "Sales__SalesTaxRate",
+   "target": "domain:Sales",
+   "type": "in_domain"
+  },
+  {
+   "source": "Sales__SalesTerritory",
+   "target": "domain:Sales",
+   "type": "in_domain"
+  },
+  {
+   "source": "Sales__SalesTerritoryHistory",
+   "target": "domain:Sales",
+   "type": "in_domain"
+  },
+  {
+   "source": "Sales__ShoppingCartItem",
+   "target": "domain:Sales",
+   "type": "in_domain"
+  },
+  {
+   "source": "Sales__SpecialOffer",
+   "target": "domain:Sales",
+   "type": "in_domain"
+  },
+  {
+   "source": "Sales__SpecialOfferProduct",
+   "target": "domain:Sales",
+   "type": "in_domain"
+  },
+  {
+   "source": "Sales__Store",
+   "target": "domain:Sales",
+   "type": "in_domain"
+  },
+  {
+   "source": "HumanResources__Employee",
+   "target": "Person__Person",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "BusinessEntityID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "HumanResources__EmployeeDepartmentHistory",
+   "target": "HumanResources__Department",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "DepartmentID"
+   ],
+   "to_columns": [
+    "DepartmentID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "HumanResources__EmployeeDepartmentHistory",
+   "target": "HumanResources__Employee",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "BusinessEntityID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "HumanResources__EmployeeDepartmentHistory",
+   "target": "HumanResources__Shift",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ShiftID"
+   ],
+   "to_columns": [
+    "ShiftID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "HumanResources__EmployeePayHistory",
+   "target": "HumanResources__Employee",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "BusinessEntityID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "HumanResources__JobCandidate",
+   "target": "HumanResources__Employee",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "BusinessEntityID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Person__Address",
+   "target": "Person__StateProvince",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "StateProvinceID"
+   ],
+   "to_columns": [
+    "StateProvinceID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Person__BusinessEntityAddress",
+   "target": "Person__Address",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "AddressID"
+   ],
+   "to_columns": [
+    "AddressID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Person__BusinessEntityAddress",
+   "target": "Person__AddressType",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "AddressTypeID"
+   ],
+   "to_columns": [
+    "AddressTypeID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Person__BusinessEntityAddress",
+   "target": "Person__BusinessEntity",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "BusinessEntityID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Person__BusinessEntityContact",
+   "target": "Person__Person",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "PersonID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Person__BusinessEntityContact",
+   "target": "Person__ContactType",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ContactTypeID"
+   ],
+   "to_columns": [
+    "ContactTypeID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Person__BusinessEntityContact",
+   "target": "Person__BusinessEntity",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "BusinessEntityID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Person__EmailAddress",
+   "target": "Person__Person",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "BusinessEntityID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Person__Password",
+   "target": "Person__Person",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "BusinessEntityID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Person__Person",
+   "target": "Person__BusinessEntity",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "BusinessEntityID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Person__PersonPhone",
+   "target": "Person__Person",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "BusinessEntityID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Person__PersonPhone",
+   "target": "Person__PhoneNumberType",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "PhoneNumberTypeID"
+   ],
+   "to_columns": [
+    "PhoneNumberTypeID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Person__StateProvince",
+   "target": "Person__CountryRegion",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "CountryRegionCode"
+   ],
+   "to_columns": [
+    "CountryRegionCode"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Person__StateProvince",
+   "target": "Sales__SalesTerritory",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "TerritoryID"
+   ],
+   "to_columns": [
+    "TerritoryID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__BillOfMaterials",
+   "target": "Production__Product",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductAssemblyID"
+   ],
+   "to_columns": [
+    "ProductID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__BillOfMaterials",
+   "target": "Production__Product",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ComponentID"
+   ],
+   "to_columns": [
+    "ProductID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__BillOfMaterials",
+   "target": "Production__UnitMeasure",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "UnitMeasureCode"
+   ],
+   "to_columns": [
+    "UnitMeasureCode"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__Document",
+   "target": "HumanResources__Employee",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "Owner"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__Product",
+   "target": "Production__UnitMeasure",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "SizeUnitMeasureCode"
+   ],
+   "to_columns": [
+    "UnitMeasureCode"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__Product",
+   "target": "Production__UnitMeasure",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "WeightUnitMeasureCode"
+   ],
+   "to_columns": [
+    "UnitMeasureCode"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__Product",
+   "target": "Production__ProductModel",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductModelID"
+   ],
+   "to_columns": [
+    "ProductModelID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__Product",
+   "target": "Production__ProductSubcategory",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductSubcategoryID"
+   ],
+   "to_columns": [
+    "ProductSubcategoryID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__ProductCostHistory",
+   "target": "Production__Product",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductID"
+   ],
+   "to_columns": [
+    "ProductID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__ProductDocument",
+   "target": "Production__Product",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductID"
+   ],
+   "to_columns": [
+    "ProductID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__ProductDocument",
+   "target": "Production__Document",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "DocumentNode"
+   ],
+   "to_columns": [
+    "DocumentNode"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__ProductInventory",
+   "target": "Production__Location",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "LocationID"
+   ],
+   "to_columns": [
+    "LocationID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__ProductInventory",
+   "target": "Production__Product",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductID"
+   ],
+   "to_columns": [
+    "ProductID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__ProductListPriceHistory",
+   "target": "Production__Product",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductID"
+   ],
+   "to_columns": [
+    "ProductID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__ProductModelIllustration",
+   "target": "Production__ProductModel",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductModelID"
+   ],
+   "to_columns": [
+    "ProductModelID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__ProductModelIllustration",
+   "target": "Production__Illustration",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "IllustrationID"
+   ],
+   "to_columns": [
+    "IllustrationID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__ProductModelProductDescriptionCulture",
+   "target": "Production__ProductDescription",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductDescriptionID"
+   ],
+   "to_columns": [
+    "ProductDescriptionID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__ProductModelProductDescriptionCulture",
+   "target": "Production__Culture",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "CultureID"
+   ],
+   "to_columns": [
+    "CultureID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__ProductModelProductDescriptionCulture",
+   "target": "Production__ProductModel",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductModelID"
+   ],
+   "to_columns": [
+    "ProductModelID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__ProductProductPhoto",
+   "target": "Production__Product",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductID"
+   ],
+   "to_columns": [
+    "ProductID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__ProductProductPhoto",
+   "target": "Production__ProductPhoto",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductPhotoID"
+   ],
+   "to_columns": [
+    "ProductPhotoID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__ProductReview",
+   "target": "Production__Product",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductID"
+   ],
+   "to_columns": [
+    "ProductID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__ProductSubcategory",
+   "target": "Production__ProductCategory",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductCategoryID"
+   ],
+   "to_columns": [
+    "ProductCategoryID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__TransactionHistory",
+   "target": "Production__Product",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductID"
+   ],
+   "to_columns": [
+    "ProductID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__WorkOrder",
+   "target": "Production__Product",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductID"
+   ],
+   "to_columns": [
+    "ProductID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__WorkOrder",
+   "target": "Production__ScrapReason",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ScrapReasonID"
+   ],
+   "to_columns": [
+    "ScrapReasonID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__WorkOrderRouting",
+   "target": "Production__Location",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "LocationID"
+   ],
+   "to_columns": [
+    "LocationID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__WorkOrderRouting",
+   "target": "Production__WorkOrder",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "WorkOrderID"
+   ],
+   "to_columns": [
+    "WorkOrderID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Purchasing__ProductVendor",
+   "target": "Production__Product",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductID"
+   ],
+   "to_columns": [
+    "ProductID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Purchasing__ProductVendor",
+   "target": "Production__UnitMeasure",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "UnitMeasureCode"
+   ],
+   "to_columns": [
+    "UnitMeasureCode"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Purchasing__ProductVendor",
+   "target": "Purchasing__Vendor",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "BusinessEntityID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Purchasing__PurchaseOrderDetail",
+   "target": "Production__Product",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductID"
+   ],
+   "to_columns": [
+    "ProductID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Purchasing__PurchaseOrderDetail",
+   "target": "Purchasing__PurchaseOrderHeader",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "PurchaseOrderID"
+   ],
+   "to_columns": [
+    "PurchaseOrderID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Purchasing__PurchaseOrderHeader",
+   "target": "HumanResources__Employee",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "EmployeeID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Purchasing__PurchaseOrderHeader",
+   "target": "Purchasing__Vendor",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "VendorID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Purchasing__PurchaseOrderHeader",
+   "target": "Purchasing__ShipMethod",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ShipMethodID"
+   ],
+   "to_columns": [
+    "ShipMethodID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Purchasing__Vendor",
+   "target": "Person__BusinessEntity",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "BusinessEntityID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__CountryRegionCurrency",
+   "target": "Person__CountryRegion",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "CountryRegionCode"
+   ],
+   "to_columns": [
+    "CountryRegionCode"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__CountryRegionCurrency",
+   "target": "Sales__Currency",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "CurrencyCode"
+   ],
+   "to_columns": [
+    "CurrencyCode"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__CurrencyRate",
+   "target": "Sales__Currency",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "FromCurrencyCode"
+   ],
+   "to_columns": [
+    "CurrencyCode"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__CurrencyRate",
+   "target": "Sales__Currency",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ToCurrencyCode"
+   ],
+   "to_columns": [
+    "CurrencyCode"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__Customer",
+   "target": "Person__Person",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "PersonID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__Customer",
+   "target": "Sales__Store",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "StoreID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__Customer",
+   "target": "Sales__SalesTerritory",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "TerritoryID"
+   ],
+   "to_columns": [
+    "TerritoryID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__PersonCreditCard",
+   "target": "Person__Person",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "BusinessEntityID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__PersonCreditCard",
+   "target": "Sales__CreditCard",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "CreditCardID"
+   ],
+   "to_columns": [
+    "CreditCardID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesOrderDetail",
+   "target": "Sales__SalesOrderHeader",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "SalesOrderID"
+   ],
+   "to_columns": [
+    "SalesOrderID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesOrderDetail",
+   "target": "Sales__SpecialOfferProduct",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "SpecialOfferID",
+    "ProductID"
+   ],
+   "to_columns": [
+    "SpecialOfferID",
+    "ProductID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesOrderHeader",
+   "target": "Person__Address",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "BillToAddressID"
+   ],
+   "to_columns": [
+    "AddressID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesOrderHeader",
+   "target": "Person__Address",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ShipToAddressID"
+   ],
+   "to_columns": [
+    "AddressID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesOrderHeader",
+   "target": "Sales__CreditCard",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "CreditCardID"
+   ],
+   "to_columns": [
+    "CreditCardID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesOrderHeader",
+   "target": "Sales__CurrencyRate",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "CurrencyRateID"
+   ],
+   "to_columns": [
+    "CurrencyRateID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesOrderHeader",
+   "target": "Sales__Customer",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "CustomerID"
+   ],
+   "to_columns": [
+    "CustomerID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesOrderHeader",
+   "target": "Sales__SalesPerson",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "SalesPersonID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesOrderHeader",
+   "target": "Purchasing__ShipMethod",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ShipMethodID"
+   ],
+   "to_columns": [
+    "ShipMethodID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesOrderHeader",
+   "target": "Sales__SalesTerritory",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "TerritoryID"
+   ],
+   "to_columns": [
+    "TerritoryID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesOrderHeaderSalesReason",
+   "target": "Sales__SalesReason",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "SalesReasonID"
+   ],
+   "to_columns": [
+    "SalesReasonID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesOrderHeaderSalesReason",
+   "target": "Sales__SalesOrderHeader",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "SalesOrderID"
+   ],
+   "to_columns": [
+    "SalesOrderID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesPerson",
+   "target": "HumanResources__Employee",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "BusinessEntityID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesPerson",
+   "target": "Sales__SalesTerritory",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "TerritoryID"
+   ],
+   "to_columns": [
+    "TerritoryID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesPersonQuotaHistory",
+   "target": "Sales__SalesPerson",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "BusinessEntityID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesTaxRate",
+   "target": "Person__StateProvince",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "StateProvinceID"
+   ],
+   "to_columns": [
+    "StateProvinceID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesTerritory",
+   "target": "Person__CountryRegion",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "CountryRegionCode"
+   ],
+   "to_columns": [
+    "CountryRegionCode"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesTerritoryHistory",
+   "target": "Sales__SalesPerson",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "BusinessEntityID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesTerritoryHistory",
+   "target": "Sales__SalesTerritory",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "TerritoryID"
+   ],
+   "to_columns": [
+    "TerritoryID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__ShoppingCartItem",
+   "target": "Production__Product",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductID"
+   ],
+   "to_columns": [
+    "ProductID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SpecialOfferProduct",
+   "target": "Production__Product",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "ProductID"
+   ],
+   "to_columns": [
+    "ProductID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SpecialOfferProduct",
+   "target": "Sales__SpecialOffer",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "SpecialOfferID"
+   ],
+   "to_columns": [
+    "SpecialOfferID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__Store",
+   "target": "Person__BusinessEntity",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "BusinessEntityID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__Store",
+   "target": "Sales__SalesPerson",
+   "type": "references",
+   "via": "declared",
+   "from_columns": [
+    "SalesPersonID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesPerson",
+   "target": "Person__Person",
+   "type": "references",
+   "via": "curated",
+   "from_columns": [
+    "BusinessEntityID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesOrderHeader",
+   "target": "Person__Person",
+   "type": "references",
+   "via": "curated",
+   "from_columns": [
+    "SalesPersonID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Purchasing__PurchaseOrderHeader",
+   "target": "Person__Person",
+   "type": "references",
+   "via": "curated",
+   "from_columns": [
+    "EmployeeID"
+   ],
+   "to_columns": [
+    "BusinessEntityID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__TransactionHistory",
+   "target": "Sales__SalesOrderHeader",
+   "type": "references",
+   "via": "curated",
+   "from_columns": [
+    "ReferenceOrderID"
+   ],
+   "to_columns": [
+    "SalesOrderID"
+   ],
+   "condition": "Production__TransactionHistory.TransactionType = 'S'"
+  },
+  {
+   "source": "Production__TransactionHistory",
+   "target": "Purchasing__PurchaseOrderHeader",
+   "type": "references",
+   "via": "curated",
+   "from_columns": [
+    "ReferenceOrderID"
+   ],
+   "to_columns": [
+    "PurchaseOrderID"
+   ],
+   "condition": "Production__TransactionHistory.TransactionType = 'P'"
+  },
+  {
+   "source": "Production__TransactionHistory",
+   "target": "Production__WorkOrder",
+   "type": "references",
+   "via": "curated",
+   "from_columns": [
+    "ReferenceOrderID"
+   ],
+   "to_columns": [
+    "WorkOrderID"
+   ],
+   "condition": "Production__TransactionHistory.TransactionType = 'W'"
+  },
+  {
+   "source": "Production__TransactionHistoryArchive",
+   "target": "Production__Product",
+   "type": "references",
+   "via": "inferred",
+   "from_columns": [
+    "ProductID"
+   ],
+   "to_columns": [
+    "ProductID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__WorkOrderRouting",
+   "target": "Production__Product",
+   "type": "references",
+   "via": "inferred",
+   "from_columns": [
+    "ProductID"
+   ],
+   "to_columns": [
+    "ProductID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesOrderDetail",
+   "target": "Production__Product",
+   "type": "references",
+   "via": "inferred",
+   "from_columns": [
+    "ProductID"
+   ],
+   "to_columns": [
+    "ProductID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Sales__SalesOrderDetail",
+   "target": "Sales__SpecialOffer",
+   "type": "references",
+   "via": "inferred",
+   "from_columns": [
+    "SpecialOfferID"
+   ],
+   "to_columns": [
+    "SpecialOfferID"
+   ],
+   "condition": null
+  },
+  {
+   "source": "Production__TransactionHistoryArchive",
+   "target": "Sales__SalesOrderHeader",
+   "type": "references",
+   "via": "kg",
+   "from_columns": [
+    "ReferenceOrderID"
+   ],
+   "to_columns": [
+    "SalesOrderID"
+   ],
+   "condition": "Production__TransactionHistoryArchive.TransactionType = 'S'"
+  },
+  {
+   "source": "Production__TransactionHistoryArchive",
+   "target": "Purchasing__PurchaseOrderHeader",
+   "type": "references",
+   "via": "kg",
+   "from_columns": [
+    "ReferenceOrderID"
+   ],
+   "to_columns": [
+    "PurchaseOrderID"
+   ],
+   "condition": "Production__TransactionHistoryArchive.TransactionType = 'P'"
+  },
+  {
+   "source": "Production__TransactionHistoryArchive",
+   "target": "Production__WorkOrder",
+   "type": "references",
+   "via": "kg",
+   "from_columns": [
+    "ReferenceOrderID"
+   ],
+   "to_columns": [
+    "WorkOrderID"
+   ],
+   "condition": "Production__TransactionHistoryArchive.TransactionType = 'W'"
+  },
+  {
+   "source": "metric:Sales revenue",
+   "target": "Sales__SalesOrderHeader",
+   "type": "uses"
+  },
+  {
+   "source": "metric:Sales revenue",
+   "target": "Sales__SalesOrderDetail",
+   "type": "uses"
+  },
+  {
+   "source": "metric:Gross billed amount",
+   "target": "Sales__SalesOrderHeader",
+   "type": "uses"
+  },
+  {
+   "source": "metric:Order count",
+   "target": "Sales__SalesOrderHeader",
+   "type": "uses"
+  },
+  {
+   "source": "metric:Units sold",
+   "target": "Sales__SalesOrderDetail",
+   "type": "uses"
+  },
+  {
+   "source": "metric:Average order value",
+   "target": "Sales__SalesOrderHeader",
+   "type": "uses"
+  },
+  {
+   "source": "metric:Discount amount",
+   "target": "Sales__SalesOrderDetail",
+   "type": "uses"
+  },
+  {
+   "source": "metric:Gross margin",
+   "target": "Sales__SalesOrderDetail",
+   "type": "uses"
+  },
+  {
+   "source": "metric:Gross margin",
+   "target": "Production__Product",
+   "type": "uses"
+  },
+  {
+   "source": "metric:Purchase spend",
+   "target": "Purchasing__PurchaseOrderHeader",
+   "type": "uses"
+  },
+  {
+   "source": "metric:Inventory on hand",
+   "target": "Production__ProductInventory",
+   "type": "uses"
+  },
+  {
+   "source": "metric:Scrap rate",
+   "target": "Production__WorkOrder",
+   "type": "uses"
+  },
+  {
+   "source": "metric:Quota attainment",
+   "target": "Sales__SalesPerson",
+   "type": "uses"
+  },
+  {
+   "source": "term:Individual customer",
+   "target": "Sales__Customer",
+   "type": "uses"
+  },
+  {
+   "source": "term:Individual customer",
+   "target": "Person__Person",
+   "type": "uses"
+  },
+  {
+   "source": "term:Reseller",
+   "target": "Sales__Customer",
+   "type": "uses"
+  },
+  {
+   "source": "term:Reseller",
+   "target": "Sales__Store",
+   "type": "uses"
+  },
+  {
+   "source": "term:Sales channel",
+   "target": "Sales__SalesOrderHeader",
+   "type": "uses"
+  },
+  {
+   "source": "term:Product hierarchy",
+   "target": "Production__ProductCategory",
+   "type": "uses"
+  },
+  {
+   "source": "term:Product hierarchy",
+   "target": "Production__ProductSubcategory",
+   "type": "uses"
+  },
+  {
+   "source": "term:Product hierarchy",
+   "target": "Production__Product",
+   "type": "uses"
+  },
+  {
+   "source": "term:Region / territory group",
+   "target": "Sales__SalesTerritory",
+   "type": "uses"
+  },
+  {
+   "source": "term:Current department",
+   "target": "HumanResources__EmployeeDepartmentHistory",
+   "type": "uses"
+  },
+  {
+   "source": "term:Current department",
+   "target": "HumanResources__Department",
+   "type": "uses"
+  },
+  {
+   "source": "term:Current pay rate",
+   "target": "HumanResources__EmployeePayHistory",
+   "type": "uses"
+  },
+  {
+   "source": "term:Full inventory transaction history",
+   "target": "Production__TransactionHistory",
+   "type": "uses"
+  },
+  {
+   "source": "term:Full inventory transaction history",
+   "target": "Production__TransactionHistoryArchive",
+   "type": "uses"
+  },
+  {
+   "source": "term:Finished good",
+   "target": "Production__Product",
+   "type": "uses"
+  },
+  {
+   "source": "term:Active product",
+   "target": "Production__Product",
+   "type": "uses"
+  },
+  {
+   "source": "entity:Business Entity",
+   "target": "Person__BusinessEntity",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Person",
+   "target": "Person__Person",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Person",
+   "target": "entity:Business Entity",
+   "type": "is_a"
+  },
+  {
+   "source": "entity:Store Contact",
+   "target": "Person__Person",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Store Contact",
+   "target": "entity:Person",
+   "type": "is_a"
+  },
+  {
+   "source": "entity:Vendor Contact",
+   "target": "Person__Person",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Vendor Contact",
+   "target": "entity:Person",
+   "type": "is_a"
+  },
+  {
+   "source": "entity:Address",
+   "target": "Person__Address",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:State or Province",
+   "target": "Person__StateProvince",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Country",
+   "target": "Person__CountryRegion",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Contact Type",
+   "target": "Person__ContactType",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Employee",
+   "target": "HumanResources__Employee",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Employee",
+   "target": "entity:Person",
+   "type": "is_a"
+  },
+  {
+   "source": "entity:Department",
+   "target": "HumanResources__Department",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Shift",
+   "target": "HumanResources__Shift",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Pay Rate Change",
+   "target": "HumanResources__EmployeePayHistory",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Job Candidate",
+   "target": "HumanResources__JobCandidate",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Customer",
+   "target": "Sales__Customer",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Individual Customer",
+   "target": "Sales__Customer",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Individual Customer",
+   "target": "entity:Customer",
+   "type": "is_a"
+  },
+  {
+   "source": "entity:Reseller Customer",
+   "target": "Sales__Customer",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Reseller Customer",
+   "target": "entity:Customer",
+   "type": "is_a"
+  },
+  {
+   "source": "entity:Store",
+   "target": "Sales__Store",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Store",
+   "target": "entity:Business Entity",
+   "type": "is_a"
+  },
+  {
+   "source": "entity:Sales Order",
+   "target": "Sales__SalesOrderHeader",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Online Order",
+   "target": "Sales__SalesOrderHeader",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Online Order",
+   "target": "entity:Sales Order",
+   "type": "is_a"
+  },
+  {
+   "source": "entity:Reseller Order",
+   "target": "Sales__SalesOrderHeader",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Reseller Order",
+   "target": "entity:Sales Order",
+   "type": "is_a"
+  },
+  {
+   "source": "entity:Sales Order Line",
+   "target": "Sales__SalesOrderDetail",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Sales Person",
+   "target": "Sales__SalesPerson",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Sales Person",
+   "target": "entity:Employee",
+   "type": "is_a"
+  },
+  {
+   "source": "entity:Sales Territory",
+   "target": "Sales__SalesTerritory",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Sales Quota",
+   "target": "Sales__SalesPersonQuotaHistory",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Special Offer",
+   "target": "Sales__SpecialOffer",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Sales Reason",
+   "target": "Sales__SalesReason",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Credit Card",
+   "target": "Sales__CreditCard",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Currency",
+   "target": "Sales__Currency",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Currency Rate",
+   "target": "Sales__CurrencyRate",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Sales Tax Rate",
+   "target": "Sales__SalesTaxRate",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Product",
+   "target": "Production__Product",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Finished Good",
+   "target": "Production__Product",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Finished Good",
+   "target": "entity:Product",
+   "type": "is_a"
+  },
+  {
+   "source": "entity:Manufactured Product",
+   "target": "Production__Product",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Manufactured Product",
+   "target": "entity:Product",
+   "type": "is_a"
+  },
+  {
+   "source": "entity:Purchased Product",
+   "target": "Production__Product",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Purchased Product",
+   "target": "entity:Product",
+   "type": "is_a"
+  },
+  {
+   "source": "entity:Product Category",
+   "target": "Production__ProductCategory",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Product Subcategory",
+   "target": "Production__ProductSubcategory",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Product Model",
+   "target": "Production__ProductModel",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Product Description",
+   "target": "Production__ProductDescription",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Language",
+   "target": "Production__Culture",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Product Review",
+   "target": "Production__ProductReview",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Location",
+   "target": "Production__Location",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Work Order",
+   "target": "Production__WorkOrder",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Work Order Operation",
+   "target": "Production__WorkOrderRouting",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Scrap Reason",
+   "target": "Production__ScrapReason",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Inventory Transaction",
+   "target": "Production__TransactionHistory",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Archived Inventory Transaction",
+   "target": "Production__TransactionHistoryArchive",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Document",
+   "target": "Production__Document",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Product Cost History",
+   "target": "Production__ProductCostHistory",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Product List Price History",
+   "target": "Production__ProductListPriceHistory",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Vendor",
+   "target": "Purchasing__Vendor",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Vendor",
+   "target": "entity:Business Entity",
+   "type": "is_a"
+  },
+  {
+   "source": "entity:Preferred Vendor",
+   "target": "Purchasing__Vendor",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Preferred Vendor",
+   "target": "entity:Vendor",
+   "type": "is_a"
+  },
+  {
+   "source": "entity:Purchase Order",
+   "target": "Purchasing__PurchaseOrderHeader",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Purchase Order Line",
+   "target": "Purchasing__PurchaseOrderDetail",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Ship Method",
+   "target": "Purchasing__ShipMethod",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Product Photo",
+   "target": "Production__ProductPhoto",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Illustration",
+   "target": "Production__Illustration",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Unit of Measure",
+   "target": "Production__UnitMeasure",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Address Type",
+   "target": "Person__AddressType",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Phone Number Type",
+   "target": "Person__PhoneNumberType",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Email Address",
+   "target": "Person__EmailAddress",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Product Inventory",
+   "target": "Production__ProductInventory",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Shopping Cart Item",
+   "target": "Sales__ShoppingCartItem",
+   "type": "stored_in"
+  },
+  {
+   "source": "entity:Customer",
+   "target": "entity:Sales Order",
+   "type": "relation",
+   "predicate": "places",
+   "cardinality": "1:N",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__Customer s JOIN Sales__SalesOrderHeader o ON o.CustomerID = s.CustomerID",
+   "verified": {
+    "pairs": 31465,
+    "cardinality": "1:N"
+   },
+   "description": "A customer places sales orders."
+  },
+  {
+   "source": "entity:Individual Customer",
+   "target": "entity:Online Order",
+   "type": "relation",
+   "predicate": "places",
+   "cardinality": "1:N",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM (SELECT * FROM Sales__Customer WHERE StoreID IS NULL) s JOIN (SELECT * FROM Sales__SalesOrderHeader WHERE OnlineOrderFlag = '1') o ON o.CustomerID = s.CustomerID",
+   "verified": {
+    "pairs": 27659,
+    "cardinality": "1:N"
+   },
+   "description": "Consumers order online."
+  },
+  {
+   "source": "entity:Reseller Customer",
+   "target": "entity:Reseller Order",
+   "type": "relation",
+   "predicate": "places",
+   "cardinality": "1:N",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM (SELECT * FROM Sales__Customer WHERE StoreID IS NOT NULL) s JOIN (SELECT * FROM Sales__SalesOrderHeader WHERE OnlineOrderFlag = '0') o ON o.CustomerID = s.CustomerID",
+   "verified": {
+    "pairs": 3806,
+    "cardinality": "1:N"
+   },
+   "description": "Store accounts order through sales people."
+  },
+  {
+   "source": "entity:Individual Customer",
+   "target": "entity:Person",
+   "type": "relation",
+   "predicate": "is_person",
+   "cardinality": "1:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM (SELECT * FROM Sales__Customer WHERE StoreID IS NULL) s JOIN Person__Person o ON s.PersonID = o.BusinessEntityID",
+   "verified": {
+    "pairs": 18484,
+    "cardinality": "1:1"
+   },
+   "description": "The person behind an individual customer account (name, demographics)."
+  },
+  {
+   "source": "entity:Reseller Customer",
+   "target": "entity:Store",
+   "type": "relation",
+   "predicate": "represents",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM (SELECT * FROM Sales__Customer WHERE StoreID IS NOT NULL) s JOIN Sales__Store o ON s.StoreID = o.BusinessEntityID",
+   "verified": {
+    "pairs": 1336,
+    "cardinality": "N:1"
+   },
+   "description": "The reseller store a customer account belongs to."
+  },
+  {
+   "source": "entity:Customer",
+   "target": "entity:Sales Territory",
+   "type": "relation",
+   "predicate": "located_in",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__Customer s JOIN Sales__SalesTerritory o ON s.TerritoryID = o.TerritoryID",
+   "verified": {
+    "pairs": 19820,
+    "cardinality": "N:1"
+   },
+   "description": "Territory where the customer is located."
+  },
+  {
+   "source": "entity:Sales Order",
+   "target": "entity:Sales Territory",
+   "type": "relation",
+   "predicate": "sold_in",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__SalesOrderHeader s JOIN Sales__SalesTerritory o ON s.TerritoryID = o.TerritoryID",
+   "verified": {
+    "pairs": 31465,
+    "cardinality": "N:1"
+   },
+   "description": "Territory in which the sale was made."
+  },
+  {
+   "source": "entity:Sales Order",
+   "target": "entity:Sales Person",
+   "type": "relation",
+   "predicate": "taken_by",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__SalesOrderHeader s JOIN Sales__SalesPerson o ON s.SalesPersonID = o.BusinessEntityID",
+   "verified": {
+    "pairs": 3806,
+    "cardinality": "N:1"
+   },
+   "description": "Sales person who took a reseller order (online orders have none)."
+  },
+  {
+   "source": "entity:Sales Order",
+   "target": "entity:Sales Order Line",
+   "type": "relation",
+   "predicate": "has_line",
+   "cardinality": "1:N",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__SalesOrderHeader s JOIN Sales__SalesOrderDetail o ON o.SalesOrderID = s.SalesOrderID",
+   "verified": {
+    "pairs": 121317,
+    "cardinality": "1:N"
+   },
+   "description": "Order lines of a sales order."
+  },
+  {
+   "source": "entity:Sales Order",
+   "target": "entity:Product",
+   "type": "relation",
+   "predicate": "contains",
+   "cardinality": "M:N",
+   "via": [
+    "Sales__SalesOrderDetail"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__SalesOrderHeader s JOIN Sales__SalesOrderDetail v1 ON v1.SalesOrderID = s.SalesOrderID JOIN Production__Product o ON v1.ProductID = o.ProductID",
+   "verified": {
+    "pairs": 121317,
+    "cardinality": "M:N"
+   },
+   "description": "Products sold on an order (through its order lines)."
+  },
+  {
+   "source": "entity:Sales Order Line",
+   "target": "entity:Product",
+   "type": "relation",
+   "predicate": "for_product",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__SalesOrderDetail s JOIN Production__Product o ON s.ProductID = o.ProductID",
+   "verified": {
+    "pairs": 121317,
+    "cardinality": "N:1"
+   },
+   "description": "Product sold on an order line."
+  },
+  {
+   "source": "entity:Sales Order Line",
+   "target": "entity:Special Offer",
+   "type": "relation",
+   "predicate": "uses",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__SalesOrderDetail s JOIN Sales__SpecialOffer o ON s.SpecialOfferID = o.SpecialOfferID",
+   "verified": {
+    "pairs": 121317,
+    "cardinality": "N:1"
+   },
+   "description": "Promotion applied to an order line (1 = No Discount)."
+  },
+  {
+   "source": "entity:Sales Order",
+   "target": "entity:Credit Card",
+   "type": "relation",
+   "predicate": "paid_with",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__SalesOrderHeader s JOIN Sales__CreditCard o ON s.CreditCardID = o.CreditCardID",
+   "verified": {
+    "pairs": 30334,
+    "cardinality": "N:1"
+   },
+   "description": "Card used to pay the order."
+  },
+  {
+   "source": "entity:Sales Order",
+   "target": "entity:Currency Rate",
+   "type": "relation",
+   "predicate": "converted_at",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__SalesOrderHeader s JOIN Sales__CurrencyRate o ON s.CurrencyRateID = o.CurrencyRateID",
+   "verified": {
+    "pairs": 13976,
+    "cardinality": "N:1"
+   },
+   "description": "Exchange rate used for non-USD orders."
+  },
+  {
+   "source": "entity:Sales Order",
+   "target": "entity:Ship Method",
+   "type": "relation",
+   "predicate": "shipped_via",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__SalesOrderHeader s JOIN Purchasing__ShipMethod o ON s.ShipMethodID = o.ShipMethodID",
+   "verified": {
+    "pairs": 31465,
+    "cardinality": "N:1"
+   },
+   "description": "Shipping method of the order."
+  },
+  {
+   "source": "entity:Sales Order",
+   "target": "entity:Address",
+   "type": "relation",
+   "predicate": "ships_to",
+   "cardinality": "N:1",
+   "via": [
+    "Sales__SalesOrderHeader.ShipToAddressID"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__SalesOrderHeader s JOIN Person__Address o ON s.ShipToAddressID = o.AddressID",
+   "verified": {
+    "pairs": 31465,
+    "cardinality": "N:1"
+   },
+   "description": "Shipping address of the order."
+  },
+  {
+   "source": "entity:Sales Order",
+   "target": "entity:Address",
+   "type": "relation",
+   "predicate": "billed_to",
+   "cardinality": "N:1",
+   "via": [
+    "Sales__SalesOrderHeader.BillToAddressID"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__SalesOrderHeader s JOIN Person__Address o ON s.BillToAddressID = o.AddressID",
+   "verified": {
+    "pairs": 31465,
+    "cardinality": "N:1"
+   },
+   "description": "Billing address of the order."
+  },
+  {
+   "source": "entity:Sales Order",
+   "target": "entity:Sales Reason",
+   "type": "relation",
+   "predicate": "motivated_by",
+   "cardinality": "M:N",
+   "via": [
+    "Sales__SalesOrderHeaderSalesReason"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__SalesOrderHeader s JOIN Sales__SalesOrderHeaderSalesReason v1 ON v1.SalesOrderID = s.SalesOrderID JOIN Sales__SalesReason o ON v1.SalesReasonID = o.SalesReasonID",
+   "verified": {
+    "pairs": 27647,
+    "cardinality": "M:N"
+   },
+   "description": "Reasons the customer gave for the purchase."
+  },
+  {
+   "source": "entity:Special Offer",
+   "target": "entity:Product",
+   "type": "relation",
+   "predicate": "applies_to",
+   "cardinality": "M:N",
+   "via": [
+    "Sales__SpecialOfferProduct"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__SpecialOffer s JOIN Sales__SpecialOfferProduct v1 ON v1.SpecialOfferID = s.SpecialOfferID JOIN Production__Product o ON v1.ProductID = o.ProductID",
+   "verified": {
+    "pairs": 538,
+    "cardinality": "M:N"
+   },
+   "description": "Products eligible for a promotion."
+  },
+  {
+   "source": "entity:Sales Person",
+   "target": "entity:Sales Territory",
+   "type": "relation",
+   "predicate": "assigned_to",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__SalesPerson s JOIN Sales__SalesTerritory o ON s.TerritoryID = o.TerritoryID",
+   "verified": {
+    "pairs": 14,
+    "cardinality": "N:1"
+   },
+   "description": "Territory currently assigned to the sales person."
+  },
+  {
+   "source": "entity:Sales Person",
+   "target": "entity:Sales Territory",
+   "type": "relation",
+   "predicate": "served_in",
+   "cardinality": "M:N",
+   "via": [
+    "Sales__SalesTerritoryHistory"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__SalesPerson s JOIN Sales__SalesTerritoryHistory v1 ON v1.BusinessEntityID = s.BusinessEntityID JOIN Sales__SalesTerritory o ON v1.TerritoryID = o.TerritoryID",
+   "verified": {
+    "pairs": 17,
+    "cardinality": "M:N"
+   },
+   "description": "Territory assignment history of sales people."
+  },
+  {
+   "source": "entity:Sales Person",
+   "target": "entity:Store",
+   "type": "relation",
+   "predicate": "manages",
+   "cardinality": "1:N",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__SalesPerson s JOIN Sales__Store o ON o.SalesPersonID = s.BusinessEntityID",
+   "verified": {
+    "pairs": 701,
+    "cardinality": "1:N"
+   },
+   "description": "Reseller stores a sales person is responsible for."
+  },
+  {
+   "source": "entity:Sales Person",
+   "target": "entity:Sales Quota",
+   "type": "relation",
+   "predicate": "has_quota",
+   "cardinality": "1:N",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__SalesPerson s JOIN Sales__SalesPersonQuotaHistory o ON o.BusinessEntityID = s.BusinessEntityID",
+   "verified": {
+    "pairs": 163,
+    "cardinality": "1:N"
+   },
+   "description": "Quarterly sales quotas of a sales person."
+  },
+  {
+   "source": "entity:Person",
+   "target": "entity:Credit Card",
+   "type": "relation",
+   "predicate": "holds",
+   "cardinality": "M:N",
+   "via": [
+    "Sales__PersonCreditCard"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Person__Person s JOIN Sales__PersonCreditCard v1 ON v1.BusinessEntityID = s.BusinessEntityID JOIN Sales__CreditCard o ON v1.CreditCardID = o.CreditCardID",
+   "verified": {
+    "pairs": 19118,
+    "cardinality": "1:1"
+   },
+   "description": "Credit cards on file for a person."
+  },
+  {
+   "source": "entity:Currency Rate",
+   "target": "entity:Currency",
+   "type": "relation",
+   "predicate": "converts_from",
+   "cardinality": "N:1",
+   "via": [
+    "Sales__CurrencyRate.FromCurrencyCode"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__CurrencyRate s JOIN Sales__Currency o ON s.FromCurrencyCode = o.CurrencyCode",
+   "verified": {
+    "pairs": 13532,
+    "cardinality": "N:1"
+   },
+   "description": "Source currency of the rate (always USD)."
+  },
+  {
+   "source": "entity:Currency Rate",
+   "target": "entity:Currency",
+   "type": "relation",
+   "predicate": "converts_to",
+   "cardinality": "N:1",
+   "via": [
+    "Sales__CurrencyRate.ToCurrencyCode"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__CurrencyRate s JOIN Sales__Currency o ON s.ToCurrencyCode = o.CurrencyCode",
+   "verified": {
+    "pairs": 13532,
+    "cardinality": "N:1"
+   },
+   "description": "Target currency of the rate."
+  },
+  {
+   "source": "entity:Country",
+   "target": "entity:Currency",
+   "type": "relation",
+   "predicate": "uses",
+   "cardinality": "M:N",
+   "via": [
+    "Sales__CountryRegionCurrency"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Person__CountryRegion s JOIN Sales__CountryRegionCurrency v1 ON v1.CountryRegionCode = s.CountryRegionCode JOIN Sales__Currency o ON v1.CurrencyCode = o.CurrencyCode",
+   "verified": {
+    "pairs": 109,
+    "cardinality": "M:N"
+   },
+   "description": "Currencies used in a country."
+  },
+  {
+   "source": "entity:Sales Tax Rate",
+   "target": "entity:State or Province",
+   "type": "relation",
+   "predicate": "applies_in",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__SalesTaxRate s JOIN Person__StateProvince o ON s.StateProvinceID = o.StateProvinceID",
+   "verified": {
+    "pairs": 29,
+    "cardinality": "N:1"
+   },
+   "description": "State or province the tax rate applies to."
+  },
+  {
+   "source": "entity:Sales Territory",
+   "target": "entity:Country",
+   "type": "relation",
+   "predicate": "located_in",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__SalesTerritory s JOIN Person__CountryRegion o ON s.CountryRegionCode = o.CountryRegionCode",
+   "verified": {
+    "pairs": 10,
+    "cardinality": "N:1"
+   },
+   "description": "Country of the territory."
+  },
+  {
+   "source": "entity:State or Province",
+   "target": "entity:Sales Territory",
+   "type": "relation",
+   "predicate": "part_of",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Person__StateProvince s JOIN Sales__SalesTerritory o ON s.TerritoryID = o.TerritoryID",
+   "verified": {
+    "pairs": 181,
+    "cardinality": "N:1"
+   },
+   "description": "Sales territory covering the state or province."
+  },
+  {
+   "source": "entity:State or Province",
+   "target": "entity:Country",
+   "type": "relation",
+   "predicate": "belongs_to",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Person__StateProvince s JOIN Person__CountryRegion o ON s.CountryRegionCode = o.CountryRegionCode",
+   "verified": {
+    "pairs": 181,
+    "cardinality": "N:1"
+   },
+   "description": "Country of the state or province."
+  },
+  {
+   "source": "entity:Address",
+   "target": "entity:State or Province",
+   "type": "relation",
+   "predicate": "located_in",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Person__Address s JOIN Person__StateProvince o ON s.StateProvinceID = o.StateProvinceID",
+   "verified": {
+    "pairs": 19614,
+    "cardinality": "N:1"
+   },
+   "description": "State or province of the address."
+  },
+  {
+   "source": "entity:Person",
+   "target": "entity:Address",
+   "type": "relation",
+   "predicate": "lives_at",
+   "cardinality": "M:N",
+   "via": [
+    "Person__BusinessEntity",
+    "Person__BusinessEntityAddress"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Person__Person s JOIN Person__BusinessEntity v1 ON s.BusinessEntityID = v1.BusinessEntityID JOIN Person__BusinessEntityAddress v2 ON v2.BusinessEntityID = v1.BusinessEntityID JOIN Person__Address o ON v2.AddressID = o.AddressID",
+   "verified": {
+    "pairs": 18798,
+    "cardinality": "1:N"
+   },
+   "description": "Addresses of a person (home, billing, shipping ...)."
+  },
+  {
+   "source": "entity:Store",
+   "target": "entity:Address",
+   "type": "relation",
+   "predicate": "located_at",
+   "cardinality": "M:N",
+   "via": [
+    "Person__BusinessEntity",
+    "Person__BusinessEntityAddress"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__Store s JOIN Person__BusinessEntity v1 ON s.BusinessEntityID = v1.BusinessEntityID JOIN Person__BusinessEntityAddress v2 ON v2.BusinessEntityID = v1.BusinessEntityID JOIN Person__Address o ON v2.AddressID = o.AddressID",
+   "verified": {
+    "pairs": 712,
+    "cardinality": "1:N"
+   },
+   "description": "Addresses of a store (main office, shipping ...)."
+  },
+  {
+   "source": "entity:Vendor",
+   "target": "entity:Address",
+   "type": "relation",
+   "predicate": "located_at",
+   "cardinality": "M:N",
+   "via": [
+    "Person__BusinessEntity",
+    "Person__BusinessEntityAddress"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Purchasing__Vendor s JOIN Person__BusinessEntity v1 ON s.BusinessEntityID = v1.BusinessEntityID JOIN Person__BusinessEntityAddress v2 ON v2.BusinessEntityID = v1.BusinessEntityID JOIN Person__Address o ON v2.AddressID = o.AddressID",
+   "verified": {
+    "pairs": 104,
+    "cardinality": "1:1"
+   },
+   "description": "Addresses of a vendor."
+  },
+  {
+   "source": "entity:Store",
+   "target": "entity:Store Contact",
+   "type": "relation",
+   "predicate": "has_contact",
+   "cardinality": "M:N",
+   "via": [
+    "Person__BusinessEntity",
+    "Person__BusinessEntityContact"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__Store s JOIN Person__BusinessEntity v1 ON s.BusinessEntityID = v1.BusinessEntityID JOIN Person__BusinessEntityContact v2 ON v2.BusinessEntityID = v1.BusinessEntityID JOIN (SELECT * FROM Person__Person WHERE PersonType = 'SC') o ON v2.PersonID = o.BusinessEntityID",
+   "verified": {
+    "pairs": 753,
+    "cardinality": "1:N"
+   },
+   "description": "Contact people of a reseller store."
+  },
+  {
+   "source": "entity:Vendor",
+   "target": "entity:Vendor Contact",
+   "type": "relation",
+   "predicate": "has_contact",
+   "cardinality": "M:N",
+   "via": [
+    "Person__BusinessEntity",
+    "Person__BusinessEntityContact"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Purchasing__Vendor s JOIN Person__BusinessEntity v1 ON s.BusinessEntityID = v1.BusinessEntityID JOIN Person__BusinessEntityContact v2 ON v2.BusinessEntityID = v1.BusinessEntityID JOIN (SELECT * FROM Person__Person WHERE PersonType = 'VC') o ON v2.PersonID = o.BusinessEntityID",
+   "verified": {
+    "pairs": 156,
+    "cardinality": "1:N"
+   },
+   "description": "Contact people of a vendor."
+  },
+  {
+   "source": "entity:Person",
+   "target": "entity:Contact Type",
+   "type": "relation",
+   "predicate": "acts_as",
+   "cardinality": "M:N",
+   "via": [
+    "Person__BusinessEntityContact"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Person__Person s JOIN Person__BusinessEntityContact v1 ON v1.PersonID = s.BusinessEntityID JOIN Person__ContactType o ON v1.ContactTypeID = o.ContactTypeID",
+   "verified": {
+    "pairs": 909,
+    "cardinality": "N:1"
+   },
+   "description": "Role a person plays as a store or vendor contact."
+  },
+  {
+   "source": "entity:Employee",
+   "target": "entity:Department",
+   "type": "relation",
+   "predicate": "works_in",
+   "cardinality": "N:1",
+   "via": [
+    "HumanResources__EmployeeDepartmentHistory"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM HumanResources__Employee s JOIN HumanResources__EmployeeDepartmentHistory v1 ON v1.BusinessEntityID = s.BusinessEntityID JOIN HumanResources__Department o ON v1.DepartmentID = o.DepartmentID WHERE v1.EndDate IS NULL",
+   "verified": {
+    "pairs": 290,
+    "cardinality": "N:1"
+   },
+   "description": "Current department of the employee."
+  },
+  {
+   "source": "entity:Employee",
+   "target": "entity:Department",
+   "type": "relation",
+   "predicate": "worked_in",
+   "cardinality": "M:N",
+   "via": [
+    "HumanResources__EmployeeDepartmentHistory"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM HumanResources__Employee s JOIN HumanResources__EmployeeDepartmentHistory v1 ON v1.BusinessEntityID = s.BusinessEntityID JOIN HumanResources__Department o ON v1.DepartmentID = o.DepartmentID",
+   "verified": {
+    "pairs": 296,
+    "cardinality": "M:N"
+   },
+   "description": "All departments an employee has been in (history)."
+  },
+  {
+   "source": "entity:Employee",
+   "target": "entity:Shift",
+   "type": "relation",
+   "predicate": "works_shift",
+   "cardinality": "N:1",
+   "via": [
+    "HumanResources__EmployeeDepartmentHistory"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM HumanResources__Employee s JOIN HumanResources__EmployeeDepartmentHistory v1 ON v1.BusinessEntityID = s.BusinessEntityID JOIN HumanResources__Shift o ON v1.ShiftID = o.ShiftID WHERE v1.EndDate IS NULL",
+   "verified": {
+    "pairs": 290,
+    "cardinality": "N:1"
+   },
+   "description": "Current shift of the employee."
+  },
+  {
+   "source": "entity:Employee",
+   "target": "entity:Pay Rate Change",
+   "type": "relation",
+   "predicate": "has_pay_rate",
+   "cardinality": "1:N",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM HumanResources__Employee s JOIN HumanResources__EmployeePayHistory o ON o.BusinessEntityID = s.BusinessEntityID",
+   "verified": {
+    "pairs": 316,
+    "cardinality": "1:N"
+   },
+   "description": "Pay rate history of the employee (latest = current)."
+  },
+  {
+   "source": "entity:Job Candidate",
+   "target": "entity:Employee",
+   "type": "relation",
+   "predicate": "hired_as",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM HumanResources__JobCandidate s JOIN HumanResources__Employee o ON s.BusinessEntityID = o.BusinessEntityID",
+   "verified": {
+    "pairs": 2,
+    "cardinality": "1:1"
+   },
+   "description": "Employee record of a hired candidate."
+  },
+  {
+   "source": "entity:Document",
+   "target": "entity:Employee",
+   "type": "relation",
+   "predicate": "owned_by",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__Document s JOIN HumanResources__Employee o ON s.Owner = o.BusinessEntityID",
+   "verified": {
+    "pairs": 12,
+    "cardinality": "N:1"
+   },
+   "description": "Employee who controls the document."
+  },
+  {
+   "source": "entity:Product",
+   "target": "entity:Product Subcategory",
+   "type": "relation",
+   "predicate": "belongs_to",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__Product s JOIN Production__ProductSubcategory o ON s.ProductSubcategoryID = o.ProductSubcategoryID",
+   "verified": {
+    "pairs": 295,
+    "cardinality": "N:1"
+   },
+   "description": "Subcategory of the product (components without one are internal parts)."
+  },
+  {
+   "source": "entity:Product Subcategory",
+   "target": "entity:Product Category",
+   "type": "relation",
+   "predicate": "part_of",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__ProductSubcategory s JOIN Production__ProductCategory o ON s.ProductCategoryID = o.ProductCategoryID",
+   "verified": {
+    "pairs": 37,
+    "cardinality": "N:1"
+   },
+   "description": "Category of the subcategory."
+  },
+  {
+   "source": "entity:Product",
+   "target": "entity:Product Category",
+   "type": "relation",
+   "predicate": "in_category",
+   "cardinality": "N:1",
+   "via": [
+    "Production__ProductSubcategory"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__Product s JOIN Production__ProductSubcategory v1 ON s.ProductSubcategoryID = v1.ProductSubcategoryID JOIN Production__ProductCategory o ON v1.ProductCategoryID = o.ProductCategoryID",
+   "verified": {
+    "pairs": 295,
+    "cardinality": "N:1"
+   },
+   "description": "Top-level category of the product."
+  },
+  {
+   "source": "entity:Product",
+   "target": "entity:Product Model",
+   "type": "relation",
+   "predicate": "based_on",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__Product s JOIN Production__ProductModel o ON s.ProductModelID = o.ProductModelID",
+   "verified": {
+    "pairs": 295,
+    "cardinality": "N:1"
+   },
+   "description": "Model the product is a variant of."
+  },
+  {
+   "source": "entity:Product Model",
+   "target": "entity:Product Description",
+   "type": "relation",
+   "predicate": "described_by",
+   "cardinality": "M:N",
+   "via": [
+    "Production__ProductModelProductDescriptionCulture"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__ProductModel s JOIN Production__ProductModelProductDescriptionCulture v1 ON v1.ProductModelID = s.ProductModelID JOIN Production__ProductDescription o ON v1.ProductDescriptionID = o.ProductDescriptionID",
+   "verified": {
+    "pairs": 762,
+    "cardinality": "1:N"
+   },
+   "description": "Marketing descriptions of a model in several languages."
+  },
+  {
+   "source": "entity:Product Description",
+   "target": "entity:Language",
+   "type": "relation",
+   "predicate": "written_in",
+   "cardinality": "N:1",
+   "via": [
+    "Production__ProductModelProductDescriptionCulture"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__ProductDescription s JOIN Production__ProductModelProductDescriptionCulture v1 ON v1.ProductDescriptionID = s.ProductDescriptionID JOIN Production__Culture o ON v1.CultureID = o.CultureID",
+   "verified": {
+    "pairs": 762,
+    "cardinality": "N:1"
+   },
+   "description": "Language of the description."
+  },
+  {
+   "source": "entity:Product",
+   "target": "entity:Product",
+   "type": "relation",
+   "predicate": "has_component",
+   "cardinality": "M:N",
+   "via": [
+    "Production__BillOfMaterials.ProductAssemblyID"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__Product s JOIN Production__BillOfMaterials v1 ON v1.ProductAssemblyID = s.ProductID JOIN Production__Product o ON v1.ComponentID = o.ProductID",
+   "verified": {
+    "pairs": 2576,
+    "cardinality": "M:N"
+   },
+   "description": "Bill of materials: components needed to build an assembly."
+  },
+  {
+   "source": "entity:Product",
+   "target": "entity:Location",
+   "type": "relation",
+   "predicate": "stocked_at",
+   "cardinality": "M:N",
+   "via": [
+    "Production__ProductInventory"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__Product s JOIN Production__ProductInventory v1 ON v1.ProductID = s.ProductID JOIN Production__Location o ON v1.LocationID = o.LocationID",
+   "verified": {
+    "pairs": 1069,
+    "cardinality": "M:N"
+   },
+   "description": "Inventory quantity of a product per location."
+  },
+  {
+   "source": "entity:Product",
+   "target": "entity:Product Review",
+   "type": "relation",
+   "predicate": "has_review",
+   "cardinality": "1:N",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__Product s JOIN Production__ProductReview o ON o.ProductID = s.ProductID",
+   "verified": {
+    "pairs": 4,
+    "cardinality": "1:N"
+   },
+   "description": "Customer reviews of the product."
+  },
+  {
+   "source": "entity:Product",
+   "target": "entity:Product Cost History",
+   "type": "relation",
+   "predicate": "has_cost_history",
+   "cardinality": "1:N",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__Product s JOIN Production__ProductCostHistory o ON o.ProductID = s.ProductID",
+   "verified": {
+    "pairs": 395,
+    "cardinality": "1:N"
+   },
+   "description": "Standard cost periods of the product."
+  },
+  {
+   "source": "entity:Product",
+   "target": "entity:Product List Price History",
+   "type": "relation",
+   "predicate": "has_price_history",
+   "cardinality": "1:N",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__Product s JOIN Production__ProductListPriceHistory o ON o.ProductID = s.ProductID",
+   "verified": {
+    "pairs": 395,
+    "cardinality": "1:N"
+   },
+   "description": "List price periods of the product."
+  },
+  {
+   "source": "entity:Product",
+   "target": "entity:Document",
+   "type": "relation",
+   "predicate": "documented_in",
+   "cardinality": "M:N",
+   "via": [
+    "Production__ProductDocument"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__Product s JOIN Production__ProductDocument v1 ON v1.ProductID = s.ProductID JOIN Production__Document o ON v1.DocumentNode = o.DocumentNode",
+   "verified": {
+    "pairs": 32,
+    "cardinality": "M:N"
+   },
+   "description": "Maintenance documents for the product."
+  },
+  {
+   "source": "entity:Work Order",
+   "target": "entity:Product",
+   "type": "relation",
+   "predicate": "produces",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__WorkOrder s JOIN Production__Product o ON s.ProductID = o.ProductID",
+   "verified": {
+    "pairs": 72591,
+    "cardinality": "N:1"
+   },
+   "description": "Product built by the work order."
+  },
+  {
+   "source": "entity:Work Order",
+   "target": "entity:Scrap Reason",
+   "type": "relation",
+   "predicate": "scrapped_because",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__WorkOrder s JOIN Production__ScrapReason o ON s.ScrapReasonID = o.ScrapReasonID",
+   "verified": {
+    "pairs": 729,
+    "cardinality": "N:1"
+   },
+   "description": "Why part of the work order quantity was scrapped."
+  },
+  {
+   "source": "entity:Work Order",
+   "target": "entity:Work Order Operation",
+   "type": "relation",
+   "predicate": "has_operation",
+   "cardinality": "1:N",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__WorkOrder s JOIN Production__WorkOrderRouting o ON o.WorkOrderID = s.WorkOrderID",
+   "verified": {
+    "pairs": 67131,
+    "cardinality": "1:N"
+   },
+   "description": "Manufacturing steps of the work order."
+  },
+  {
+   "source": "entity:Work Order Operation",
+   "target": "entity:Location",
+   "type": "relation",
+   "predicate": "performed_at",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__WorkOrderRouting s JOIN Production__Location o ON s.LocationID = o.LocationID",
+   "verified": {
+    "pairs": 67131,
+    "cardinality": "N:1"
+   },
+   "description": "Work center where the step is performed."
+  },
+  {
+   "source": "entity:Inventory Transaction",
+   "target": "entity:Product",
+   "type": "relation",
+   "predicate": "moves",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__TransactionHistory s JOIN Production__Product o ON s.ProductID = o.ProductID",
+   "verified": {
+    "pairs": 113443,
+    "cardinality": "N:1"
+   },
+   "description": "Product whose stock changed."
+  },
+  {
+   "source": "entity:Archived Inventory Transaction",
+   "target": "entity:Product",
+   "type": "relation",
+   "predicate": "moves",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__TransactionHistoryArchive s JOIN Production__Product o ON s.ProductID = o.ProductID",
+   "verified": {
+    "pairs": 89253,
+    "cardinality": "N:1"
+   },
+   "description": "Product whose stock changed (archive)."
+  },
+  {
+   "source": "entity:Inventory Transaction",
+   "target": "entity:Sales Order",
+   "type": "relation",
+   "predicate": "for_sales_order",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__TransactionHistory s JOIN Sales__SalesOrderHeader o ON s.ReferenceOrderID = o.SalesOrderID AND (s.TransactionType = 'S')",
+   "verified": {
+    "pairs": 74575,
+    "cardinality": "N:1"
+   },
+   "description": "Sales order behind a sales transaction (TransactionType S)."
+  },
+  {
+   "source": "entity:Inventory Transaction",
+   "target": "entity:Purchase Order",
+   "type": "relation",
+   "predicate": "for_purchase_order",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__TransactionHistory s JOIN Purchasing__PurchaseOrderHeader o ON s.ReferenceOrderID = o.PurchaseOrderID AND (s.TransactionType = 'P')",
+   "verified": {
+    "pairs": 7866,
+    "cardinality": "N:1"
+   },
+   "description": "Purchase order behind a purchase transaction (TransactionType P)."
+  },
+  {
+   "source": "entity:Inventory Transaction",
+   "target": "entity:Work Order",
+   "type": "relation",
+   "predicate": "for_work_order",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__TransactionHistory s JOIN Production__WorkOrder o ON s.ReferenceOrderID = o.WorkOrderID AND (s.TransactionType = 'W')",
+   "verified": {
+    "pairs": 31002,
+    "cardinality": "1:1"
+   },
+   "description": "Work order behind a manufacturing transaction (TransactionType W)."
+  },
+  {
+   "source": "entity:Vendor",
+   "target": "entity:Product",
+   "type": "relation",
+   "predicate": "supplies",
+   "cardinality": "M:N",
+   "via": [
+    "Purchasing__ProductVendor"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Purchasing__Vendor s JOIN Purchasing__ProductVendor v1 ON v1.BusinessEntityID = s.BusinessEntityID JOIN Production__Product o ON v1.ProductID = o.ProductID",
+   "verified": {
+    "pairs": 460,
+    "cardinality": "M:N"
+   },
+   "description": "Products a vendor can supply, with lead time and prices."
+  },
+  {
+   "source": "entity:Purchase Order",
+   "target": "entity:Vendor",
+   "type": "relation",
+   "predicate": "placed_with",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Purchasing__PurchaseOrderHeader s JOIN Purchasing__Vendor o ON s.VendorID = o.BusinessEntityID",
+   "verified": {
+    "pairs": 4012,
+    "cardinality": "N:1"
+   },
+   "description": "Vendor the purchase order was sent to."
+  },
+  {
+   "source": "entity:Purchase Order",
+   "target": "entity:Employee",
+   "type": "relation",
+   "predicate": "created_by",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Purchasing__PurchaseOrderHeader s JOIN HumanResources__Employee o ON s.EmployeeID = o.BusinessEntityID",
+   "verified": {
+    "pairs": 4012,
+    "cardinality": "N:1"
+   },
+   "description": "Employee (buyer) who created the purchase order."
+  },
+  {
+   "source": "entity:Purchase Order",
+   "target": "entity:Purchase Order Line",
+   "type": "relation",
+   "predicate": "has_line",
+   "cardinality": "1:N",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Purchasing__PurchaseOrderHeader s JOIN Purchasing__PurchaseOrderDetail o ON o.PurchaseOrderID = s.PurchaseOrderID",
+   "verified": {
+    "pairs": 8845,
+    "cardinality": "1:N"
+   },
+   "description": "Lines of the purchase order."
+  },
+  {
+   "source": "entity:Purchase Order Line",
+   "target": "entity:Product",
+   "type": "relation",
+   "predicate": "for_product",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Purchasing__PurchaseOrderDetail s JOIN Production__Product o ON s.ProductID = o.ProductID",
+   "verified": {
+    "pairs": 8845,
+    "cardinality": "N:1"
+   },
+   "description": "Product ordered on the line."
+  },
+  {
+   "source": "entity:Purchase Order",
+   "target": "entity:Product",
+   "type": "relation",
+   "predicate": "contains",
+   "cardinality": "M:N",
+   "via": [
+    "Purchasing__PurchaseOrderDetail"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Purchasing__PurchaseOrderHeader s JOIN Purchasing__PurchaseOrderDetail v1 ON v1.PurchaseOrderID = s.PurchaseOrderID JOIN Production__Product o ON v1.ProductID = o.ProductID",
+   "verified": {
+    "pairs": 8845,
+    "cardinality": "M:N"
+   },
+   "description": "Products ordered on the purchase order."
+  },
+  {
+   "source": "entity:Purchase Order",
+   "target": "entity:Ship Method",
+   "type": "relation",
+   "predicate": "shipped_via",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Purchasing__PurchaseOrderHeader s JOIN Purchasing__ShipMethod o ON s.ShipMethodID = o.ShipMethodID",
+   "verified": {
+    "pairs": 4012,
+    "cardinality": "N:1"
+   },
+   "description": "Shipping method of the purchase order."
+  },
+  {
+   "source": "entity:Product",
+   "target": "entity:Product Photo",
+   "type": "relation",
+   "predicate": "has_photo",
+   "cardinality": "M:N",
+   "via": [
+    "Production__ProductProductPhoto.ProductID"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__Product s JOIN Production__ProductProductPhoto v1 ON v1.ProductID = s.ProductID JOIN Production__ProductPhoto o ON v1.ProductPhotoID = o.ProductPhotoID",
+   "verified": {
+    "pairs": 504,
+    "cardinality": "N:1"
+   },
+   "description": "Product photos are mapped through the product-photo cross-reference."
+  },
+  {
+   "source": "entity:Product Model",
+   "target": "entity:Illustration",
+   "type": "relation",
+   "predicate": "illustrated_by",
+   "cardinality": "M:N",
+   "via": [
+    "Production__ProductModelIllustration.ProductModelID"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__ProductModel s JOIN Production__ProductModelIllustration v1 ON v1.ProductModelID = s.ProductModelID JOIN Production__Illustration o ON v1.IllustrationID = o.IllustrationID",
+   "verified": {
+    "pairs": 7,
+    "cardinality": "M:N"
+   },
+   "description": "Product model diagrams are linked through the model-illustration cross-reference."
+  },
+  {
+   "source": "entity:Product Model",
+   "target": "entity:Language",
+   "type": "relation",
+   "predicate": "described_in_language",
+   "cardinality": "M:N",
+   "via": [
+    "Production__ProductModelProductDescriptionCulture.ProductModelID"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__ProductModel s JOIN Production__ProductModelProductDescriptionCulture v1 ON v1.ProductModelID = s.ProductModelID JOIN Production__Culture o ON v1.CultureID = o.CultureID",
+   "verified": {
+    "pairs": 762,
+    "cardinality": "M:N"
+   },
+   "description": "Language used for a model's product description."
+  },
+  {
+   "source": "entity:Product",
+   "target": "entity:Product Inventory",
+   "type": "relation",
+   "predicate": "held_in_inventory",
+   "cardinality": "1:N",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__Product s JOIN Production__ProductInventory o ON o.ProductID = s.ProductID",
+   "verified": {
+    "pairs": 1069,
+    "cardinality": "1:N"
+   },
+   "description": "Current inventory balances for a product across locations."
+  },
+  {
+   "source": "entity:Location",
+   "target": "entity:Product Inventory",
+   "type": "relation",
+   "predicate": "has_inventory",
+   "cardinality": "1:N",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__Location s JOIN Production__ProductInventory o ON o.LocationID = s.LocationID",
+   "verified": {
+    "pairs": 1069,
+    "cardinality": "1:N"
+   },
+   "description": "Inventory balances stored at a location."
+  },
+  {
+   "source": "entity:Business Entity",
+   "target": "entity:Address Type",
+   "type": "relation",
+   "predicate": "has_address_type",
+   "cardinality": "M:N",
+   "via": [
+    "Person__BusinessEntityAddress.BusinessEntityID"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Person__BusinessEntity s JOIN Person__BusinessEntityAddress v1 ON v1.BusinessEntityID = s.BusinessEntityID JOIN Person__AddressType o ON v1.AddressTypeID = o.AddressTypeID",
+   "verified": {
+    "pairs": 19614,
+    "cardinality": "M:N"
+   },
+   "description": "Address type for an address associated with a business entity."
+  },
+  {
+   "source": "entity:Person",
+   "target": "entity:Email Address",
+   "type": "relation",
+   "predicate": "has_email_address",
+   "cardinality": "1:N",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Person__Person s JOIN Person__EmailAddress o ON o.BusinessEntityID = s.BusinessEntityID",
+   "verified": {
+    "pairs": 19972,
+    "cardinality": "1:1"
+   },
+   "description": "Email addresses associated with a person."
+  },
+  {
+   "source": "entity:Person",
+   "target": "entity:Phone Number Type",
+   "type": "relation",
+   "predicate": "has_phone_type",
+   "cardinality": "M:N",
+   "via": [
+    "Person__PersonPhone.BusinessEntityID"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Person__Person s JOIN Person__PersonPhone v1 ON v1.BusinessEntityID = s.BusinessEntityID JOIN Person__PhoneNumberType o ON v1.PhoneNumberTypeID = o.PhoneNumberTypeID",
+   "verified": {
+    "pairs": 19972,
+    "cardinality": "N:1"
+   },
+   "description": "Phone number types recorded for a person."
+  },
+  {
+   "source": "entity:Product",
+   "target": "entity:Unit of Measure",
+   "type": "relation",
+   "predicate": "measured_by",
+   "cardinality": "N:1",
+   "via": [
+    "Production__Product.SizeUnitMeasureCode"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__Product s JOIN Production__UnitMeasure o ON s.SizeUnitMeasureCode = o.UnitMeasureCode",
+   "verified": {
+    "pairs": 176,
+    "cardinality": "N:1"
+   },
+   "description": "Unit associated with the product size."
+  },
+  {
+   "source": "entity:Product",
+   "target": "entity:Unit of Measure",
+   "type": "relation",
+   "predicate": "weighed_by",
+   "cardinality": "N:1",
+   "via": [
+    "Production__Product.WeightUnitMeasureCode"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Production__Product s JOIN Production__UnitMeasure o ON s.WeightUnitMeasureCode = o.UnitMeasureCode",
+   "verified": {
+    "pairs": 205,
+    "cardinality": "N:1"
+   },
+   "description": "Unit associated with product weight."
+  },
+  {
+   "source": "entity:Shopping Cart Item",
+   "target": "entity:Product",
+   "type": "relation",
+   "predicate": "contains_product",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Sales__ShoppingCartItem s JOIN Production__Product o ON s.ProductID = o.ProductID",
+   "verified": {
+    "pairs": 3,
+    "cardinality": "1:1"
+   },
+   "description": "Product and quantity in the cart item."
+  },
+  {
+   "source": "entity:Business Entity",
+   "target": "entity:Address",
+   "type": "relation",
+   "predicate": "has_address",
+   "cardinality": "M:N",
+   "via": [
+    "Person__BusinessEntityAddress.BusinessEntityID"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Person__BusinessEntity s JOIN Person__BusinessEntityAddress v1 ON v1.BusinessEntityID = s.BusinessEntityID JOIN Person__Address o ON v1.AddressID = o.AddressID",
+   "verified": {
+    "pairs": 19614,
+    "cardinality": "1:N"
+   },
+   "description": "Business entities can have multiple addresses through the address-assignment table."
+  },
+  {
+   "source": "entity:Address",
+   "target": "entity:Address Type",
+   "type": "relation",
+   "predicate": "has_address_type",
+   "cardinality": "M:N",
+   "via": [
+    "Person__BusinessEntityAddress.AddressID"
+   ],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM Person__Address s JOIN Person__BusinessEntityAddress v1 ON v1.AddressID = s.AddressID JOIN Person__AddressType o ON v1.AddressTypeID = o.AddressTypeID",
+   "verified": {
+    "pairs": 19614,
+    "cardinality": "N:1"
+   },
+   "description": "Address type is assigned to a business entity's address association."
+  },
+  {
+   "source": "entity:Reseller Customer",
+   "target": "entity:Store Contact",
+   "type": "relation",
+   "predicate": "has_contact",
+   "cardinality": "N:1",
+   "via": [],
+   "on": null,
+   "polymorphic": null,
+   "join": "FROM (SELECT * FROM Sales__Customer WHERE StoreID IS NOT NULL) s JOIN (SELECT * FROM Person__Person WHERE PersonType = 'SC') o ON s.PersonID = o.BusinessEntityID WHERE s.StoreID IS NOT NULL",
+   "verified": {
+    "pairs": 635,
+    "cardinality": "1:1"
+   },
+   "description": "The reseller customer record may identify the store contact through PersonID."
+  },
+  {
+   "source": "entity:Archived Inventory Transaction",
+   "target": "entity:Sales Order",
+   "type": "relation",
+   "predicate": "for_sales_order",
+   "cardinality": "N:1",
+   "via": [],
+   "on": "Production__TransactionHistoryArchive.ReferenceOrderID = Sales__SalesOrderHeader.SalesOrderID",
+   "polymorphic": {
+    "column": [
+     "ReferenceOrderID"
+    ],
+    "type_column": "TransactionType",
+    "type": "S"
+   },
+   "join": "FROM Production__TransactionHistoryArchive s JOIN Sales__SalesOrderHeader o ON s.ReferenceOrderID = o.SalesOrderID WHERE s.TransactionType = 'S'",
+   "verified": {
+    "pairs": 46742,
+    "cardinality": "N:1",
+    "unmatched": 0
+   },
+   "description": "Order behind an archived stock movement; TransactionType says which kind."
+  },
+  {
+   "source": "entity:Archived Inventory Transaction",
+   "target": "entity:Purchase Order",
+   "type": "relation",
+   "predicate": "for_purchase_order",
+   "cardinality": "N:1",
+   "via": [],
+   "on": "Production__TransactionHistoryArchive.ReferenceOrderID = Purchasing__PurchaseOrderHeader.PurchaseOrderID",
+   "polymorphic": {
+    "column": [
+     "ReferenceOrderID"
+    ],
+    "type_column": "TransactionType",
+    "type": "P"
+   },
+   "join": "FROM Production__TransactionHistoryArchive s JOIN Purchasing__PurchaseOrderHeader o ON s.ReferenceOrderID = o.PurchaseOrderID WHERE s.TransactionType = 'P'",
+   "verified": {
+    "pairs": 922,
+    "cardinality": "N:1",
+    "unmatched": 0
+   },
+   "description": "Order behind an archived stock movement; TransactionType says which kind."
+  },
+  {
+   "source": "entity:Archived Inventory Transaction",
+   "target": "entity:Work Order",
+   "type": "relation",
+   "predicate": "for_work_order",
+   "cardinality": "1:1",
+   "via": [],
+   "on": "Production__TransactionHistoryArchive.ReferenceOrderID = Production__WorkOrder.WorkOrderID",
+   "polymorphic": {
+    "column": [
+     "ReferenceOrderID"
+    ],
+    "type_column": "TransactionType",
+    "type": "W"
+   },
+   "join": "FROM Production__TransactionHistoryArchive s JOIN Production__WorkOrder o ON s.ReferenceOrderID = o.WorkOrderID WHERE s.TransactionType = 'W'",
+   "verified": {
+    "pairs": 41589,
+    "cardinality": "1:1",
+    "unmatched": 0
+   },
+   "description": "Order behind an archived stock movement; TransactionType says which kind."
+  }
+ ]
+}

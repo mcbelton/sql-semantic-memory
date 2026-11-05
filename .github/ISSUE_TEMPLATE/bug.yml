@@ -1,0 +1,41 @@
+name: Bug report
+description: Something sqlmem does is wrong. Bugs are fixed red-to-green with a reproducing test.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: The command or MCP tool call, and what it returned (paste the output).
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: input
+    id: requirement
+    attributes:
+      label: Requirement violated
+      description: ID from docs/requirements.md, if you know it (e.g. REQ-SAFE-01).
+  - type: dropdown
+    id: engine
+    attributes:
+      label: Database engine
+      options: [SQLite, DuckDB, PostgreSQL, MySQL / MariaDB, SQL Server / Azure SQL, Other]
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: sqlmem version, Python version, OS, database server version.
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy
+      options:
+        - label: I removed passwords, connection strings with credentials and personal data from this report.
+          required: true

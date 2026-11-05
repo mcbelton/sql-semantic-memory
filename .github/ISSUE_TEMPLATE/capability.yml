@@ -1,0 +1,29 @@
+name: Capability request
+description: A new capability, phrased so it can become a requirement with tests.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: Need
+      description: Who needs what, and why. A concrete example question, database or workflow helps most.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Observable behavior that proves it works (these become rows in docs/requirements.md and tests).
+      placeholder: |
+        - Given ..., when ..., then ...
+    validations:
+      required: true
+  - type: textarea
+    id: measure
+    attributes:
+      label: How we will measure it
+      description: Tests, eval cases (evals/retrieval_cases.yaml), engines to run, performance numbers.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

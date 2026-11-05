@@ -1,0 +1,28 @@
+# Prepares the environment for the GitHub Copilot coding agent before it starts working on an issue:
+# the same Python and dependencies as CI, so the agent can run scripts/verify.py and produce evidence.
+name: Copilot Setup Steps
+
+on:
+  workflow_dispatch:
+  push:
+    paths: [.github/workflows/copilot-setup-steps.yml]
+  pull_request:
+    paths: [.github/workflows/copilot-setup-steps.yml]
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install sqlmem with development tools
+        run: python -m pip install -e ".[mcp,llm,duckdb,dev]"
+      - name: Warm up pyright (downloads its Node runtime once)
+        run: python -m pyright --version

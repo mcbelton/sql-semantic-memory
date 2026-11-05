@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="@@CSP@@">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>sqlmem · Private chart</title>
+  <style>@@STYLE@@</style>
+</head>
+<body>
+  <main class="workspace">
+    <header class="masthead">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">▥</span> SQLMEM <span class="private-badge">PRIVATE · OFFLINE</span></div>
+      <button id="theme-toggle" type="button" aria-label="Switch light or dark theme">Light / dark</button>
+    </header>
+    <section class="chart-card" aria-labelledby="chart-title">
+      <div class="heading">
+        <p class="kicker">YOUR DATA, IN FOCUS</p>
+        <h1 id="chart-title">Private chart</h1>
+        <p id="chart-subtitle" class="subtitle"></p>
+      </div>
+      <div class="status-banner">
+        <p id="row-summary" class="row-summary"></p>
+        <p id="render-status" role="status" aria-live="polite">Preparing your chart…</p>
+      </div>
+      <ul id="warnings" class="warnings" aria-label="Data warnings"></ul>
+      <nav class="toolbar" aria-label="Chart controls">
+        <div class="toolbar-group">
+          <button id="reset-chart" type="button" aria-label="Reset chart view and legend">↺ Reset view</button>
+          <button id="toggle-table" type="button" aria-controls="table-panel" aria-expanded="false">View data table</button>
+        </div>
+        <div class="toolbar-group">
+          <button id="download-csv" type="button" hidden aria-label="Download mapped data as CSV">CSV ↓</button>
+          <button id="download-png" class="primary" type="button" aria-label="Download chart as PNG">Export PNG ↓</button>
+        </div>
+      </nav>
+      <div class="plot-shell">
+        <div id="chart" role="img" aria-label="Interactive chart; use the data table for accessible values"></div>
+        <div id="chart-message" class="chart-message" hidden></div>
+      </div>
+      <section id="table-panel" hidden aria-label="Mapped chart data">
+        <p class="table-caption">Only mapped, declared non-sensitive columns. Exact decimal text is retained.</p>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable chart data">
+          <table id="data-table"><caption>Chart source data</caption><thead></thead><tbody></tbody></table>
+        </div>
+        <div class="pagination">
+          <button id="table-previous" type="button" aria-label="Previous data page">← Previous</button>
+          <span id="table-page" aria-live="polite"></span>
+          <button id="table-next" type="button" aria-label="Next data page">Next →</button>
+        </div>
+      </section>
+      <footer class="card-footer"><span>LOCAL BY DESIGN</span><span>No network. No uploads. Your data stays in this file.</span></footer>
+    </section>
+    <p class="privacy-note">This HTML contains plotted data. Keep it private; delete it when no longer needed.</p>
+    <details class="notices"><summary>Open-source licenses &amp; notices</summary><pre>@@NOTICES@@</pre></details>
+  </main>
+  <script id="sqlmem-chart-data" type="application/json">@@PAYLOAD@@</script>
+  @@SCRIPTS@@
+</body>
+</html>

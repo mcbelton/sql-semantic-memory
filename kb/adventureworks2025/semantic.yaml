@@ -1,0 +1,811 @@
+# Curated business semantics for AdventureWorks2025 (SQLite port of the Microsoft AdventureWorks OLTP sample).
+# This file is the human-owned "meaning" layer. `sqlmem build` merges it with the scanned catalog.json
+# (facts: types, keys, row counts, value profiles). Unknown table/column names are reported as warnings.
+# Column entries: either a plain description string, or {description, values: {code: meaning}, synonyms, sensitive}.
+
+database:
+  name: AdventureWorks2025
+  description: >-
+    Operational (OLTP) database of Adventure Works Cycles, a fictitious multinational manufacturer and seller of
+    bicycles, components, clothing and accessories. Bikes are sold online to individual consumers and through
+    sales people to resellers (bike stores) in North America, Europe and the Pacific. Covers sales, products and
+    manufacturing, purchasing from vendors, people/addresses and HR. Sales orders run from 2022-05-30 to 2025-06-29.
+    This is a SQLite port of the SQL Server sample; SQL Server schemas are encoded in table names as Schema__Table.
+  dialect_notes:
+    - "SQLite dialect: use LIMIT (not TOP), strftime()/substr() for dates, || for string concatenation, no GETDATE()/DATEPART()."
+    - "Dates are ISO-8601 TEXT like '2024-03-31T00:00:00'. Year = substr(col,1,4), month = substr(col,1,7). Filter with string comparisons: OrderDate >= '2024-01-01' AND OrderDate < '2025-01-01'."
+    - "Boolean flags are TEXT '0'/'1' (e.g. OnlineOrderFlag = '1', MakeFlag = '1')."
+    - "Fixed-width code columns are space padded: ProductLine 'R ', Class 'H ', Style 'U ', UnitMeasureCode 'EA ', CultureID 'en    '. Compare with TRIM(col) = 'R'."
+    - "Money columns are NUMERIC (stored as REAL); wrap aggregates in ROUND(x, 2) for presentation."
+    - "Data ends 2025-06-29 for sales (2022 and 2025 are partial years). Interpret relative periods such as 'last year' against the latest date in the data unless the user gives explicit dates, and say which period you used."
+    - "Quote reserved-word columns: Sales__SalesTerritory.\"Group\", Production__ProductProductPhoto.\"Primary\"."
+    - "A SQL Server name Schema.Table maps to Schema__Table here (Sales.SalesOrderHeader -> Sales__SalesOrderHeader)."
+    - "People, employees, stores and vendors share one key space: BusinessEntityID (Person__BusinessEntity)."
+
+domains:
+  Sales: "Customers (individuals and reseller stores), sales orders and lines, sales people and quotas, territories, special offers, currencies, credit cards and sales tax."
+  Production: "Products and their category hierarchy, models, descriptions and photos, bill of materials, inventory, work orders/routing (manufacturing), cost/price history and inventory transactions."
+  Purchasing: "Vendors, the products they supply, purchase orders and shipping methods."
+  Person: "People and business entities with their addresses, e-mail, phones, contact roles, countries and states/provinces."
+  HumanResources: "Employees, departments, department/shift history, pay history and job candidates."
+  dbo: "Technical tables: build version, DDL audit log and error log. Not business data."
+
+tables:
+  # ------------------------------------------------------------------ Sales
+  Sales__SalesOrderHeader:
+    description: "General sales order information: one row per customer order, with dates, customer, channel, sales person, territory, addresses, payment and order totals."
+    grain: one row per sales order (SalesOrderID)
+    synonyms: [sales orders, orders, sales, invoices, order header]
+    notes:
+      - "Net sales revenue = SUM(SubTotal) (excludes tax and freight); TotalDue = SubTotal + TaxAmt + Freight."
+      - "OnlineOrderFlag = '1' means an internet order by an individual customer (no SalesPersonID); '0' means a reseller order placed by a sales person."
+    columns:
+      SalesOrderID: "Primary key of the order. SalesOrderNumber is the same number with an 'SO' prefix."
+      RevisionNumber: Incremental number tracking changes to the order over time.
+      OrderDate: Date the order was placed (ISO text). Use for sales period analysis.
+      DueDate: Date the order is due to the customer.
+      ShipDate: Date the order was shipped.
+      Status:
+        description: Order current status.
+        values: {1: In process, 2: Approved, 3: Backordered, 4: Rejected, 5: Shipped, 6: Cancelled}
+      OnlineOrderFlag:
+        description: Sales channel flag.
+        values: {'0': Order placed by a sales person (reseller channel), '1': Order placed online by the customer (internet channel)}
+        synonyms: [channel, online, internet, web order]
+      SalesOrderNumber: "Unique sales order identification number ('SO' + SalesOrderID)."
+      PurchaseOrderNumber: Customer purchase order number reference (reseller orders only).
+      AccountNumber: Financial accounting number reference.
+      CustomerID: Customer who placed the order. Join Sales__Customer.
+      SalesPersonID: Sales person who created the order (NULL for online orders). Join Sales__SalesPerson / Person__Person on BusinessEntityID.
+      TerritoryID: Sales territory in which the sale was made. Join Sales__SalesTerritory.
+      BillToAddressID: Customer billing address. Join Person__Address.
+      ShipToAddressID: Customer shipping address. Join Person__Address -> Person__StateProvince -> Person__CountryRegion for geography.
+      ShipMethodID: Shipping method. Join Purchasing__ShipMethod.
+      CreditCardID: Credit card used for payment. Join Sales__CreditCard.
+      CreditCardApprovalCode: Approval code provided by the credit card company.
+      CurrencyRateID: Currency exchange rate used (NULL = US dollars). Join Sales__CurrencyRate.
+      SubTotal: {description: "Net sales amount of the order = SUM(Sales__SalesOrderDetail.LineTotal). The standard revenue measure.", synonyms: [revenue, net sales, sales amount]}
+      TaxAmt: Tax amount.
+      Freight: Shipping cost charged.
+      TotalDue: {description: "Total due from the customer = SubTotal + TaxAmt + Freight (gross billed amount).", synonyms: [gross sales, billed amount, invoice total]}
+      Comment: Sales representative comments (always NULL in this data).
+
+  Sales__SalesOrderDetail:
+    description: "Individual products (order lines) of each sales order: product, quantity, unit price, discount and line total."
+    grain: one row per order line (SalesOrderID, SalesOrderDetailID)
+    synonyms: [order lines, order items, line items, sales lines, products sold]
+    columns:
+      SalesOrderID: Order the line belongs to. Join Sales__SalesOrderHeader.
+      SalesOrderDetailID: Line number, unique across all orders.
+      CarrierTrackingNumber: Shipment tracking number supplied by the shipper (reseller orders).
+      OrderQty: {description: Quantity of the product ordered on this line., synonyms: [units, quantity sold]}
+      ProductID: Product sold. Join Production__Product.
+      SpecialOfferID: Promotion applied. Join Sales__SpecialOffer (1 = No Discount).
+      UnitPrice: Selling price of a single unit.
+      UnitPriceDiscount: Discount as a fraction of the unit price (0.15 = 15% off).
+      LineTotal: {description: "Line amount = UnitPrice * (1 - UnitPriceDiscount) * OrderQty.", synonyms: [line revenue, line amount]}
+
+  Sales__Customer:
+    description: "Customers. A customer is either an individual consumer (PersonID set, StoreID NULL) or a reseller store (StoreID set; PersonID is then the store contact, if any)."
+    synonyms: [clients, buyers, accounts]
+    columns:
+      CustomerID: Primary key. Referenced by Sales__SalesOrderHeader.CustomerID.
+      PersonID: "Individual customer or store contact person. Join Person__Person.BusinessEntityID for the name."
+      StoreID: "Reseller store; NULL for individual customers. Join Sales__Store.BusinessEntityID."
+      TerritoryID: Sales territory where the customer is located. Join Sales__SalesTerritory.
+      AccountNumber: "Customer account number assigned by the accounting system ('AW' + zero-padded CustomerID)."
+
+  Sales__Store:
+    description: "Reseller customers: bike shops that buy Adventure Works products for resale."
+    synonyms: [resellers, stores, shops, dealers, retailers, B2B customers]
+    columns:
+      BusinessEntityID: Primary key (business entity of the store). Referenced by Sales__Customer.StoreID.
+      Name: Store (company) name.
+      SalesPersonID: Sales person assigned to the store. Join Sales__SalesPerson.
+      Demographics: "XML survey data about the store: annual sales, revenue, business type, specialty, square feet, number of employees."
+
+  Sales__SalesPerson:
+    description: "Sales representatives (employees) with their territory, quota, bonus, commission and year-to-date sales. Names are in Person__Person (same BusinessEntityID)."
+    synonyms: [sales reps, sales representatives, account managers, sellers]
+    columns:
+      BusinessEntityID: Primary key; same id as HumanResources__Employee and Person__Person.
+      TerritoryID: Territory currently assigned. Join Sales__SalesTerritory (NULL for managers without territory).
+      SalesQuota: Projected yearly sales (quota).
+      Bonus: Bonus due if quota is met.
+      CommissionPct: Commission percent received per sale (fraction).
+      SalesYTD: Sales total year to date (stored snapshot value).
+      SalesLastYear: Sales total of the previous year (stored snapshot value).
+
+  Sales__SalesPersonQuotaHistory:
+    description: Sales quota history per sales person and quota date (quarterly quotas).
+    columns:
+      QuotaDate: Date the quota applies from.
+      SalesQuota: Sales quota amount for the period.
+
+  Sales__SalesTerritory:
+    description: "Sales territories: 5 US regions (Northwest, Northeast, Central, Southwest, Southeast) plus Canada, France, Germany, Australia and United Kingdom, grouped into North America, Europe and Pacific."
+    synonyms: [territories, regions, sales regions, markets]
+    columns:
+      Name: Territory name.
+      CountryRegionCode: ISO country code. Join Person__CountryRegion.
+      Group: {description: "Geographic group of the territory (column name is a reserved word: quote it as \"Group\").", synonyms: [region group, continent]}
+      SalesYTD: Sales in the territory year to date (stored snapshot value).
+      SalesLastYear: Sales in the territory the previous year (stored snapshot value).
+      CostYTD: Business costs in the territory year to date (all 0 here).
+      CostLastYear: Business costs in the territory the previous year (all 0 here).
+
+  Sales__SalesTerritoryHistory:
+    description: "History of sales person assignments to territories (StartDate/EndDate; EndDate NULL = current)."
+    columns:
+      EndDate: Date the assignment ended; NULL = current assignment.
+
+  Sales__SpecialOffer:
+    description: "Promotions and discounts (volume discounts, seasonal sales, clearance, etc.)."
+    synonyms: [promotions, discounts, offers, deals]
+    columns:
+      Description: Offer name.
+      DiscountPct: Discount percentage as a fraction (0.15 = 15%).
+      Type: Discount type category.
+      Category: "Who the discount applies to: Reseller, Customer or No Discount."
+      MinQty: Minimum quantity for the discount.
+      MaxQty: Maximum quantity for the discount.
+
+  Sales__SpecialOfferProduct: Cross-reference of which products are eligible for which special offers.
+
+  Sales__SalesReason:
+    description: "Lookup of reasons customers give for a purchase (price, promotion, advertising, quality, ...)."
+    columns:
+      ReasonType: "Category of the reason: Marketing, Promotion or Other."
+
+  Sales__SalesOrderHeaderSalesReason: Cross-reference mapping sales orders to the purchase reasons given (online orders).
+
+  Sales__CreditCard:
+    description: Customer credit card information.
+    columns:
+      CardType: Credit card brand name.
+      ExpMonth: Expiration month.
+      ExpYear: Expiration year.
+
+  Sales__PersonCreditCard: Cross-reference mapping people to their credit cards.
+
+  Sales__Currency:
+    description: Lookup of ISO currency codes and names.
+    synonyms: [currencies]
+
+  Sales__CurrencyRate:
+    description: "Daily currency exchange rates from USD to other currencies."
+    synonyms: [exchange rates, fx rates]
+    columns:
+      FromCurrencyCode: Currency converted from (always USD).
+      ToCurrencyCode: Currency converted to.
+      AverageRate: Average exchange rate for the day.
+      EndOfDayRate: Final exchange rate for the day.
+
+  Sales__CountryRegionCurrency: Cross-reference mapping countries/regions to their ISO currency codes.
+
+  Sales__SalesTaxRate:
+    description: Tax rates per state/province.
+    columns:
+      TaxType:
+        description: Which transactions the tax applies to.
+        values: {1: Retail transactions, 2: Wholesale transactions, 3: All sales (retail and wholesale)}
+      TaxRate: Tax rate in percent (7.25 = 7.25%).
+
+  Sales__ShoppingCartItem: "Online shopping cart contents until the order is submitted or cancelled (only test rows here)."
+
+  # ------------------------------------------------------------------ Production
+  Production__Product:
+    description: "Products sold or used in manufacturing: bikes, components, clothing and accessories, with pricing, cost, attributes and lifecycle dates."
+    synonyms: [products, items, SKUs, parts, bikes, merchandise]
+    columns:
+      ProductID: Primary key.
+      Name: Product name.
+      ProductNumber: Unique product identification number (SKU).
+      MakeFlag:
+        description: Whether the product is made in-house.
+        values: {'0': Purchased from a vendor, '1': Manufactured in-house}
+      FinishedGoodsFlag:
+        description: Whether the product is a salable finished good.
+        values: {'0': Not a salable item (component/raw material), '1': Salable finished good}
+      Color: Product color (NULL for many components).
+      SafetyStockLevel: Minimum inventory quantity.
+      ReorderPoint: Inventory level that triggers a purchase order or work order.
+      StandardCost: {description: Standard (current) cost of the product., synonyms: [unit cost, cost]}
+      ListPrice: {description: Selling (list) price., synonyms: [price, retail price]}
+      Size: Product size (frame size in cm for bikes, or S/M/L/XL for clothing).
+      SizeUnitMeasureCode: Unit of measure for Size (padded code, e.g. 'CM ').
+      WeightUnitMeasureCode: Unit of measure for Weight (padded code, e.g. 'LB ', 'G  ').
+      Weight: Product weight.
+      DaysToManufacture: Number of days required to manufacture the product.
+      ProductLine:
+        description: "Product line. Values are space padded ('R '): use TRIM(ProductLine) = 'R'."
+        values: {R: Road, M: Mountain, T: Touring, S: Standard}
+      Class:
+        description: "Quality class. Space padded ('H '): use TRIM(Class)."
+        values: {H: High, M: Medium, L: Low}
+      Style:
+        description: "Target style. Space padded ('U '): use TRIM(Style)."
+        values: {W: Womens, M: Mens, U: Universal}
+      ProductSubcategoryID: Subcategory. Join Production__ProductSubcategory -> Production__ProductCategory.
+      ProductModelID: Product model. Join Production__ProductModel.
+      SellStartDate: Date the product became available for sale.
+      SellEndDate: Date the product stopped being available for sale (NULL = still sold).
+      DiscontinuedDate: Date the product was discontinued.
+
+  Production__ProductCategory:
+    description: "Top level of the product hierarchy: Bikes, Components, Clothing, Accessories."
+    synonyms: [categories, product categories, product lines]
+  Production__ProductSubcategory:
+    description: "Second level of the product hierarchy (e.g. Mountain Bikes, Road Bikes, Helmets, Jerseys). Each belongs to one ProductCategory."
+    synonyms: [subcategories, product types]
+  Production__ProductModel:
+    description: "Product models: a model groups product variants (sizes/colors), e.g. 'Mountain-100'."
+    columns:
+      CatalogDescription: Detailed product catalog information in XML.
+      Instructions: Manufacturing instructions in XML.
+  Production__ProductDescription: Product descriptions (marketing text) in several languages.
+  Production__ProductModelProductDescriptionCulture: "Cross-reference mapping product models to their descriptions per language (CultureID is space padded, e.g. 'en    ')."
+  Production__Culture:
+    description: "Languages in which product descriptions are stored. CultureID is padded to 6 characters ('en    ')."
+  Production__ProductPhoto: Product images (thumbnail and large photo blobs).
+  Production__ProductProductPhoto:
+    description: Cross-reference mapping products to their photos.
+    columns:
+      Primary:
+        description: Whether this is the principal photo (reserved word, quote as "Primary").
+        values: {'0': Not the principal image, '1': Principal image}
+  Production__Illustration: Bicycle assembly diagrams (XML).
+  Production__ProductModelIllustration: Cross-reference mapping product models to illustrations.
+  Production__ProductReview:
+    description: Customer reviews of products.
+    synonyms: [reviews, ratings, feedback]
+    columns:
+      Rating: Product rating given by the reviewer, 1 (lowest) to 5 (highest).
+      Comments: Review text.
+  Production__ProductCostHistory:
+    description: "History of product standard costs (StartDate/EndDate; EndDate NULL = current). Use for period-accurate cost of goods."
+  Production__ProductListPriceHistory:
+    description: "History of product list prices (StartDate/EndDate; EndDate NULL = current)."
+  Production__ProductInventory:
+    description: "Current inventory quantity of each product per location (shelf/bin)."
+    synonyms: [inventory, stock, on hand]
+    columns:
+      LocationID: Inventory location. Join Production__Location.
+      Shelf: Storage compartment within the location.
+      Bin: Storage container on a shelf.
+      Quantity: {description: Quantity of the product in the location., synonyms: [stock on hand, units in stock]}
+  Production__Location:
+    description: "Inventory and manufacturing locations (work centers such as Frame Welding, Paint, Final Assembly, and storage areas)."
+    columns:
+      CostRate: Standard hourly cost of the manufacturing location.
+      Availability: Work capacity (in hours) of the manufacturing location.
+  Production__BillOfMaterials:
+    description: "Bill of materials: components required to build each product assembly (hierarchical parent/child)."
+    synonyms: [BOM, components list, parts list]
+    columns:
+      ProductAssemblyID: Parent product (assembly). Join Production__Product.
+      ComponentID: Component product. Join Production__Product.
+      EndDate: Date the component stopped being used in the assembly (NULL = current).
+      BOMLevel: Depth of the component from its top-level assembly (0 = top).
+      PerAssemblyQty: Quantity of the component needed per assembly.
+  Production__UnitMeasure:
+    description: "Unit of measure lookup. Codes are space padded to 3 characters ('EA ', 'LB ', 'CM ')."
+  Production__WorkOrder:
+    description: "Manufacturing work orders: product, quantity to build, scrapped quantity and dates."
+    synonyms: [work orders, production orders, manufacturing orders, jobs]
+    columns:
+      OrderQty: Product quantity to build.
+      StockedQty: Quantity built and put in inventory (= OrderQty - ScrappedQty).
+      ScrappedQty: Quantity that failed inspection.
+      ScrapReasonID: Reason for scrapping (NULL when nothing was scrapped). Join Production__ScrapReason.
+      StartDate: Work order start date.
+      EndDate: Work order end date.
+      DueDate: Work order due date.
+  Production__WorkOrderRouting:
+    description: "Manufacturing steps (routing) of each work order: location, planned vs actual dates, hours and cost."
+    columns:
+      OperationSequence: Manufacturing process step sequence.
+      LocationID: Manufacturing location where the step is done.
+      ActualResourceHrs: Number of manufacturing hours used.
+      PlannedCost: Estimated manufacturing cost.
+      ActualCost: Actual manufacturing cost.
+  Production__ScrapReason:
+    description: Manufacturing failure (scrap) reasons.
+  Production__TransactionHistory:
+    description: "Inventory transactions (sales, purchases, work orders) from 2024-07-30 onward. Older transactions are in Production__TransactionHistoryArchive; UNION ALL both for full history."
+    synonyms: [inventory transactions, stock movements]
+    columns:
+      ReferenceOrderID: "Id of the originating order: SalesOrderID, PurchaseOrderID or WorkOrderID depending on TransactionType."
+      ReferenceOrderLineID: Line number of the originating order.
+      TransactionDate: Date of the transaction.
+      TransactionType:
+        description: Type of transaction.
+        values: {W: Work order, S: Sales order, P: Purchase order}
+      Quantity: Product quantity.
+      ActualCost: Product cost.
+  Production__TransactionHistoryArchive:
+    description: "Inventory transactions before 2024-07-30 (archive of Production__TransactionHistory, same columns)."
+    columns:
+      TransactionType:
+        description: Type of transaction.
+        values: {W: Work order, S: Sales order, P: Purchase order}
+  Production__Document:
+    description: Product maintenance documents (hierarchical folders and documents).
+    columns:
+      FolderFlag:
+        description: Folder or document.
+        values: {0: Document, 1: Folder}
+      Status:
+        description: Document status.
+        values: {1: Pending approval, 2: Approved, 3: Obsolete}
+      Owner: Employee who controls the document.
+  Production__ProductDocument: Cross-reference mapping products to related documents.
+
+  # ------------------------------------------------------------------ Purchasing
+  Purchasing__PurchaseOrderHeader:
+    description: "Purchase orders to vendors: vendor, employee who created it, status, dates, shipping and totals."
+    grain: one row per purchase order
+    synonyms: [purchase orders, POs, procurement, purchases]
+    columns:
+      Status:
+        description: Purchase order status.
+        values: {1: Pending, 2: Approved, 3: Rejected, 4: Complete}
+      EmployeeID: Employee who created the purchase order. Join HumanResources__Employee / Person__Person on BusinessEntityID.
+      VendorID: Vendor the order was placed with. Join Purchasing__Vendor.BusinessEntityID.
+      ShipMethodID: Shipping method. Join Purchasing__ShipMethod.
+      OrderDate: Purchase order creation date.
+      ShipDate: Estimated shipment date from the vendor.
+      SubTotal: {description: "Purchase amount = SUM(Purchasing__PurchaseOrderDetail.LineTotal).", synonyms: [spend, purchase amount]}
+      TaxAmt: Tax amount.
+      Freight: Shipping cost.
+      TotalDue: Total due to the vendor = SubTotal + TaxAmt + Freight.
+  Purchasing__PurchaseOrderDetail:
+    description: Purchase order lines (products ordered from vendors).
+    synonyms: [purchase order lines, PO lines]
+    columns:
+      DueDate: Date the product is expected to be received.
+      OrderQty: Quantity ordered.
+      UnitPrice: Vendor's selling price of a single unit.
+      LineTotal: Line amount = OrderQty * UnitPrice.
+      ReceivedQty: Quantity actually received from the vendor.
+      RejectedQty: Quantity rejected during inspection.
+      StockedQty: Quantity accepted into inventory (= ReceivedQty - RejectedQty).
+  Purchasing__Vendor:
+    description: Companies from which Adventure Works purchases parts and other goods.
+    synonyms: [suppliers, vendors, manufacturers]
+    columns:
+      BusinessEntityID: Primary key; referenced by PurchaseOrderHeader.VendorID and ProductVendor.
+      AccountNumber: Vendor account (identification) number.
+      Name: Company name.
+      CreditRating:
+        description: Vendor credit rating.
+        values: {1: Superior, 2: Excellent, 3: Above average, 4: Average, 5: Below average}
+      PreferredVendorStatus:
+        description: Preferred vendor flag.
+        values: {'0': Do not use if another vendor is available, '1': Preferred over other vendors supplying the same product}
+      ActiveFlag:
+        description: Whether the vendor is still used.
+        values: {'0': Vendor no longer used, '1': Vendor actively used}
+      PurchasingWebServiceURL: Vendor web service URL.
+  Purchasing__ProductVendor:
+    description: "Which vendors supply which products, with lead time, prices and order quantity limits."
+    columns:
+      AverageLeadTime: Average days between placing an order with the vendor and receiving the product.
+      StandardPrice: Vendor's usual selling price.
+      LastReceiptCost: Price paid on the last purchase.
+      LastReceiptDate: Date the product was last received.
+      MinOrderQty: Minimum quantity that should be ordered.
+      MaxOrderQty: Maximum quantity that should be ordered.
+      OnOrderQty: Quantity currently on order.
+      UnitMeasureCode: Unit of measure (padded code, e.g. 'EA ', 'CTN').
+  Purchasing__ShipMethod:
+    description: Shipping companies/methods used for sales and purchase orders.
+    columns:
+      ShipBase: Minimum shipping charge.
+      ShipRate: Shipping charge per pound.
+
+  # ------------------------------------------------------------------ Person
+  Person__Person:
+    description: "Every human known to Adventure Works: employees, sales people, individual customers, store and vendor contacts. Holds names and contact preferences."
+    synonyms: [people, persons, contacts, names, individuals]
+    columns:
+      BusinessEntityID: Primary key; same id used by HumanResources__Employee, Sales__SalesPerson and Sales__Customer.PersonID.
+      PersonType:
+        description: Primary role of the person.
+        values: {SC: Store contact, IN: Individual (retail) customer, SP: Sales person, EM: Employee (non-sales), VC: Vendor contact, GC: General contact}
+      NameStyle:
+        description: Name order.
+        values: {'0': "Western style (first name, last name)", '1': "Eastern style (last name, first name)"}
+      Title: Courtesy title (Mr., Ms., ...).
+      FirstName: First name of the person.
+      MiddleName: Middle name or initial.
+      LastName: Last name of the person.
+      Suffix: Surname suffix (Jr., Sr., ...).
+      EmailPromotion:
+        description: E-mail marketing consent.
+        values: {0: Does not want promotions, 1: Wants promotions from Adventure Works, 2: Wants promotions from Adventure Works and partners}
+      AdditionalContactInfo: Additional contact information in XML.
+      Demographics: "XML survey of individual customers (total purchase, birth date, marital status, yearly income, gender, children, education, occupation, home ownership, cars, commute distance)."
+  Person__BusinessEntity: "Source of the BusinessEntityID shared by people, stores and vendors (the common key for addresses and contacts)."
+  Person__BusinessEntityAddress: Cross-reference mapping people, stores and vendors to their addresses (with address type).
+  Person__BusinessEntityContact: Cross-reference mapping stores and vendors to their contact people (with contact type).
+  Person__Address:
+    description: Street addresses of customers, employees, stores and vendors.
+    synonyms: [addresses, locations, cities]
+    columns:
+      City: City name.
+      StateProvinceID: State/province. Join Person__StateProvince (-> Person__CountryRegion for the country).
+      PostalCode: Postal (ZIP) code.
+      SpatialLocation: Latitude/longitude (binary geography, not queryable here).
+  Person__AddressType:
+    description: Types of addresses (Billing, Home, Main Office, Primary, Shipping, Archive).
+  Person__ContactType:
+    description: Roles of business contacts (Owner, Purchasing Agent, Marketing Manager, ...).
+  Person__CountryRegion:
+    description: ISO country/region codes and names.
+    synonyms: [countries, nations]
+  Person__StateProvince:
+    description: States and provinces with their country and sales territory.
+    synonyms: [states, provinces, regions]
+    columns:
+      StateProvinceCode: ISO standard state or province code.
+      IsOnlyStateProvinceFlag:
+        description: Whether a real state/province code exists.
+        values: {'0': StateProvinceCode exists, '1': Unavailable - CountryRegionCode used instead}
+      TerritoryID: Sales territory the state/province belongs to.
+  Person__EmailAddress: E-mail addresses of people.
+  Person__PersonPhone: Phone numbers of people with phone type.
+  Person__PhoneNumberType:
+    description: Phone number types (Cell, Home, Work).
+  Person__Password:
+    description: One-way hashed passwords of people (never select these columns).
+
+  # ------------------------------------------------------------------ HumanResources
+  HumanResources__Employee:
+    description: "Employees: job title, hire date, demographics, hourly/salaried, vacation and sick leave. Names are in Person__Person (same BusinessEntityID)."
+    synonyms: [employees, staff, workers, personnel, headcount]
+    columns:
+      BusinessEntityID: Primary key; same id as Person__Person.
+      NationalIDNumber: National identification number such as a social security number.
+      LoginID: Network login.
+      OrganizationNode: Position in the corporate hierarchy (binary hierarchyid; use OrganizationLevel).
+      OrganizationLevel: Depth in the corporate hierarchy (1 = reports to the CEO).
+      JobTitle: Work title such as Buyer or Sales Representative.
+      BirthDate: Date of birth.
+      MaritalStatus: {description: Marital status., values: {M: Married, S: Single}}
+      Gender: {description: Gender., values: {M: Male, F: Female}}
+      HireDate: Date the employee was hired.
+      SalariedFlag:
+        description: Job classification.
+        values: {'0': "Hourly, not exempt from collective bargaining", '1': "Salaried, exempt from collective bargaining"}
+      VacationHours: Number of available vacation hours.
+      SickLeaveHours: Number of available sick leave hours.
+      CurrentFlag: {description: Employment status., values: {'0': Inactive, '1': Active}}
+  HumanResources__Department:
+    description: "Departments (Engineering, Sales, Production, ...) grouped into department groups."
+    synonyms: [departments, teams, org units]
+    columns:
+      GroupName: Department group the department belongs to.
+  HumanResources__EmployeeDepartmentHistory:
+    description: "Department and shift assignments of employees over time. EndDate NULL = the employee's current department."
+    columns:
+      EndDate: Date the employee left the department; NULL = current department.
+      ShiftID: Work shift. Join HumanResources__Shift.
+  HumanResources__EmployeePayHistory:
+    description: "Pay rate changes per employee. The current rate is the row with the latest RateChangeDate."
+    synonyms: [salaries, pay rates, wages, compensation]
+    columns:
+      RateChangeDate: Date the rate became effective.
+      Rate: {description: Hourly pay rate., synonyms: [salary, wage, pay]}
+      PayFrequency:
+        description: Pay frequency.
+        values: {1: Paid monthly, 2: Paid biweekly}
+  HumanResources__Shift:
+    description: Work shifts (Day, Evening, Night) with start and end times.
+  HumanResources__JobCandidate:
+    description: Resumes (XML) submitted by job applicants; BusinessEntityID is set if the candidate was hired.
+
+  # ------------------------------------------------------------------ dbo (technical)
+  dbo__AWBuildVersion: Current version number of the AdventureWorks sample database (technical).
+  dbo__DatabaseLog: Audit log of DDL changes made to the database (technical, not business data).
+  dbo__ErrorLog: Errors captured by the database's error-handling procedure (technical, empty).
+
+relationships:
+  - from: Sales__SalesPerson.BusinessEntityID
+    to: Person__Person.BusinessEntityID
+    description: Sales person name (same BusinessEntityID; shortcut instead of going through HumanResources__Employee).
+  - from: Sales__SalesOrderHeader.SalesPersonID
+    to: Person__Person.BusinessEntityID
+    description: Name of the sales person who took the order.
+  - from: Purchasing__PurchaseOrderHeader.EmployeeID
+    to: Person__Person.BusinessEntityID
+    description: Name of the employee (buyer) who created the purchase order.
+  - from: Production__TransactionHistory.ReferenceOrderID
+    to: Sales__SalesOrderHeader.SalesOrderID
+    condition: "Production__TransactionHistory.TransactionType = 'S'"
+    description: Sales order behind a sales transaction.
+  - from: Production__TransactionHistory.ReferenceOrderID
+    to: Purchasing__PurchaseOrderHeader.PurchaseOrderID
+    condition: "Production__TransactionHistory.TransactionType = 'P'"
+    description: Purchase order behind a purchase transaction.
+  - from: Production__TransactionHistory.ReferenceOrderID
+    to: Production__WorkOrder.WorkOrderID
+    condition: "Production__TransactionHistory.TransactionType = 'W'"
+    description: Work order behind a manufacturing transaction.
+
+glossary:
+  - term: Individual customer
+    synonyms: [consumer, retail customer, B2C, online shopper]
+    definition: "A Sales__Customer with PersonID set and StoreID NULL (Person__Person.PersonType = 'IN'). Buys online (OnlineOrderFlag = '1')."
+    tables: [Sales__Customer, Person__Person]
+    sql: "Sales__Customer.StoreID IS NULL"
+  - term: Reseller
+    synonyms: [store, bike shop, dealer, B2B customer, wholesale customer]
+    definition: "A Sales__Customer with StoreID set; the store name is Sales__Store.Name. Reseller orders are placed by a sales person (OnlineOrderFlag = '0')."
+    tables: [Sales__Customer, Sales__Store]
+    sql: "Sales__Customer.StoreID IS NOT NULL"
+  - term: Sales channel
+    synonyms: [online vs reseller, internet sales, reseller sales]
+    definition: "Online/internet channel = OnlineOrderFlag = '1' (individual customers, no sales person). Reseller channel = OnlineOrderFlag = '0' (stores, with SalesPersonID)."
+    tables: [Sales__SalesOrderHeader]
+    sql: "CASE OnlineOrderFlag WHEN '1' THEN 'Online' ELSE 'Reseller' END"
+  - term: Product hierarchy
+    synonyms: [product category, category, subcategory]
+    definition: "Production__ProductCategory (Bikes, Components, Clothing, Accessories) -> Production__ProductSubcategory -> Production__Product. Products without a subcategory are internal components."
+    tables: [Production__ProductCategory, Production__ProductSubcategory, Production__Product]
+  - term: Region / territory group
+    synonyms: [geography, region, North America, Europe, Pacific]
+    definition: "Sales__SalesTerritory.\"Group\" groups territories into North America, Europe and Pacific; Name is the territory (5 US regions or a country)."
+    tables: [Sales__SalesTerritory]
+  - term: Current department
+    synonyms: [employee department, works in]
+    definition: "The HumanResources__EmployeeDepartmentHistory row with EndDate IS NULL."
+    tables: [HumanResources__EmployeeDepartmentHistory, HumanResources__Department]
+    sql: "HumanResources__EmployeeDepartmentHistory.EndDate IS NULL"
+  - term: Current pay rate
+    synonyms: [salary, current wage]
+    definition: "Per employee, the HumanResources__EmployeePayHistory row with the latest RateChangeDate (ROW_NUMBER() OVER (PARTITION BY BusinessEntityID ORDER BY RateChangeDate DESC) = 1)."
+    tables: [HumanResources__EmployeePayHistory]
+  - term: Full inventory transaction history
+    synonyms: [all transactions, transaction archive]
+    definition: "Production__TransactionHistory holds transactions from 2024-07-30; Production__TransactionHistoryArchive holds earlier ones. UNION ALL both tables for complete history."
+    tables: [Production__TransactionHistory, Production__TransactionHistoryArchive]
+  - term: Finished good
+    synonyms: [salable product, sellable product]
+    definition: "Product with FinishedGoodsFlag = '1'. MakeFlag = '1' means manufactured in-house, '0' purchased."
+    tables: [Production__Product]
+    sql: "Production__Product.FinishedGoodsFlag = '1'"
+  - term: Active product
+    synonyms: [currently sold, available products]
+    definition: "Product still for sale: SellEndDate IS NULL and DiscontinuedDate IS NULL."
+    tables: [Production__Product]
+    sql: "Production__Product.SellEndDate IS NULL AND Production__Product.DiscontinuedDate IS NULL"
+
+metrics:
+  - name: Sales revenue
+    synonyms: [revenue, net sales, sales, sales amount, turnover]
+    definition: "Net sales excluding tax and freight. Order level: SUM(SubTotal). Line level (by product): SUM(LineTotal) - both give the same total."
+    sql: "SUM(Sales__SalesOrderHeader.SubTotal)"
+    tables: [Sales__SalesOrderHeader, Sales__SalesOrderDetail]
+  - name: Gross billed amount
+    synonyms: [total due, gross sales, amount billed]
+    definition: "Amount invoiced to customers including tax and freight."
+    sql: "SUM(Sales__SalesOrderHeader.TotalDue)"
+    tables: [Sales__SalesOrderHeader]
+  - name: Order count
+    synonyms: [number of orders, orders]
+    definition: Number of sales orders.
+    sql: "COUNT(DISTINCT Sales__SalesOrderHeader.SalesOrderID)"
+    tables: [Sales__SalesOrderHeader]
+  - name: Units sold
+    synonyms: [quantity sold, volume]
+    definition: Number of product units sold.
+    sql: "SUM(Sales__SalesOrderDetail.OrderQty)"
+    tables: [Sales__SalesOrderDetail]
+  - name: Average order value
+    synonyms: [AOV, average order size, basket size]
+    definition: Net sales revenue divided by number of orders.
+    sql: "SUM(Sales__SalesOrderHeader.SubTotal) / COUNT(*)"
+    tables: [Sales__SalesOrderHeader]
+  - name: Discount amount
+    synonyms: [discounts given, promotion cost]
+    definition: Value of price discounts granted on order lines.
+    sql: "SUM(Sales__SalesOrderDetail.OrderQty * Sales__SalesOrderDetail.UnitPrice * Sales__SalesOrderDetail.UnitPriceDiscount)"
+    tables: [Sales__SalesOrderDetail]
+  - name: Gross margin
+    synonyms: [profit, margin, gross profit]
+    definition: "Approximate: line revenue minus quantity x current standard cost. For period-accurate cost use Production__ProductCostHistory."
+    sql: "SUM(Sales__SalesOrderDetail.LineTotal - Sales__SalesOrderDetail.OrderQty * Production__Product.StandardCost)"
+    tables: [Sales__SalesOrderDetail, Production__Product]
+  - name: Purchase spend
+    synonyms: [procurement spend, vendor spend, purchases]
+    definition: "Amount ordered from vendors excluding tax and freight; usually exclude rejected orders (Status = 3)."
+    sql: "SUM(Purchasing__PurchaseOrderHeader.SubTotal)"
+    tables: [Purchasing__PurchaseOrderHeader]
+  - name: Inventory on hand
+    synonyms: [stock level, units in stock]
+    definition: Units currently in stock, summed over all locations.
+    sql: "SUM(Production__ProductInventory.Quantity)"
+    tables: [Production__ProductInventory]
+  - name: Scrap rate
+    synonyms: [defect rate, scrap percentage, yield loss]
+    definition: Share of work-order quantity that failed inspection.
+    sql: "1.0 * SUM(Production__WorkOrder.ScrappedQty) / SUM(Production__WorkOrder.OrderQty)"
+    tables: [Production__WorkOrder]
+  - name: Quota attainment
+    synonyms: [quota achievement, performance vs quota]
+    definition: Sales person year-to-date sales divided by their sales quota.
+    sql: "Sales__SalesPerson.SalesYTD / Sales__SalesPerson.SalesQuota"
+    tables: [Sales__SalesPerson]
+
+examples:
+  - question: Net sales revenue and order count by year
+    sql: |
+      SELECT substr(OrderDate, 1, 4) AS order_year, COUNT(*) AS orders, ROUND(SUM(SubTotal), 2) AS revenue
+      FROM Sales__SalesOrderHeader
+      GROUP BY order_year
+      ORDER BY order_year;
+  - question: Monthly order count and revenue trend
+    sql: |
+      SELECT substr(OrderDate, 1, 7) AS month, COUNT(*) AS orders, ROUND(SUM(SubTotal), 2) AS revenue
+      FROM Sales__SalesOrderHeader
+      GROUP BY month
+      ORDER BY month;
+  - question: Revenue by sales territory in 2024
+    sql: |
+      SELECT st.Name AS territory, st."Group" AS region, ROUND(SUM(soh.SubTotal), 2) AS revenue
+      FROM Sales__SalesOrderHeader soh
+      JOIN Sales__SalesTerritory st ON st.TerritoryID = soh.TerritoryID
+      WHERE soh.OrderDate >= '2024-01-01' AND soh.OrderDate < '2025-01-01'
+      GROUP BY st.Name, st."Group"
+      ORDER BY revenue DESC;
+  - question: Online vs reseller sales by year
+    sql: |
+      SELECT substr(OrderDate, 1, 4) AS order_year,
+             CASE OnlineOrderFlag WHEN '1' THEN 'Online' ELSE 'Reseller' END AS channel,
+             COUNT(*) AS orders, ROUND(SUM(SubTotal), 2) AS revenue
+      FROM Sales__SalesOrderHeader
+      GROUP BY order_year, channel
+      ORDER BY order_year, channel;
+  - question: Top 10 products by revenue
+    sql: |
+      SELECT p.Name AS product, SUM(d.OrderQty) AS units, ROUND(SUM(d.LineTotal), 2) AS revenue
+      FROM Sales__SalesOrderDetail d
+      JOIN Production__Product p ON p.ProductID = d.ProductID
+      GROUP BY p.ProductID, p.Name
+      ORDER BY revenue DESC
+      LIMIT 10;
+  - question: Revenue by product category and subcategory
+    sql: |
+      SELECT pc.Name AS category, ps.Name AS subcategory, ROUND(SUM(d.LineTotal), 2) AS revenue
+      FROM Sales__SalesOrderDetail d
+      JOIN Production__Product p ON p.ProductID = d.ProductID
+      JOIN Production__ProductSubcategory ps ON ps.ProductSubcategoryID = p.ProductSubcategoryID
+      JOIN Production__ProductCategory pc ON pc.ProductCategoryID = ps.ProductCategoryID
+      GROUP BY pc.Name, ps.Name
+      ORDER BY revenue DESC;
+  - question: Gross margin by product category (approximate, current standard cost)
+    sql: |
+      SELECT pc.Name AS category, ROUND(SUM(d.LineTotal), 2) AS revenue,
+             ROUND(SUM(d.OrderQty * p.StandardCost), 2) AS cost,
+             ROUND(SUM(d.LineTotal) - SUM(d.OrderQty * p.StandardCost), 2) AS gross_margin
+      FROM Sales__SalesOrderDetail d
+      JOIN Production__Product p ON p.ProductID = d.ProductID
+      JOIN Production__ProductSubcategory ps ON ps.ProductSubcategoryID = p.ProductSubcategoryID
+      JOIN Production__ProductCategory pc ON pc.ProductCategoryID = ps.ProductCategoryID
+      GROUP BY pc.Name
+      ORDER BY gross_margin DESC;
+  - question: Sales people ranked by year-to-date sales with quota attainment
+    sql: |
+      SELECT p.FirstName || ' ' || p.LastName AS sales_person, st.Name AS territory,
+             ROUND(sp.SalesYTD, 2) AS sales_ytd, sp.SalesQuota,
+             ROUND(100.0 * sp.SalesYTD / sp.SalesQuota, 1) AS quota_pct
+      FROM Sales__SalesPerson sp
+      JOIN Person__Person p ON p.BusinessEntityID = sp.BusinessEntityID
+      LEFT JOIN Sales__SalesTerritory st ON st.TerritoryID = sp.TerritoryID
+      ORDER BY sp.SalesYTD DESC;
+  - question: Top 10 resellers (stores) by revenue
+    sql: |
+      SELECT s.Name AS store, COUNT(*) AS orders, ROUND(SUM(soh.SubTotal), 2) AS revenue
+      FROM Sales__SalesOrderHeader soh
+      JOIN Sales__Customer c ON c.CustomerID = soh.CustomerID
+      JOIN Sales__Store s ON s.BusinessEntityID = c.StoreID
+      GROUP BY s.BusinessEntityID, s.Name
+      ORDER BY revenue DESC
+      LIMIT 10;
+  - question: Top 10 individual customers by revenue
+    sql: |
+      SELECT p.FirstName || ' ' || p.LastName AS customer, COUNT(*) AS orders, ROUND(SUM(soh.SubTotal), 2) AS revenue
+      FROM Sales__SalesOrderHeader soh
+      JOIN Sales__Customer c ON c.CustomerID = soh.CustomerID
+      JOIN Person__Person p ON p.BusinessEntityID = c.PersonID
+      WHERE c.StoreID IS NULL
+      GROUP BY c.CustomerID, customer
+      ORDER BY revenue DESC
+      LIMIT 10;
+  - question: Revenue by ship-to country
+    sql: |
+      SELECT cr.Name AS country, ROUND(SUM(soh.SubTotal), 2) AS revenue
+      FROM Sales__SalesOrderHeader soh
+      JOIN Person__Address a ON a.AddressID = soh.ShipToAddressID
+      JOIN Person__StateProvince sp ON sp.StateProvinceID = a.StateProvinceID
+      JOIN Person__CountryRegion cr ON cr.CountryRegionCode = sp.CountryRegionCode
+      GROUP BY cr.Name
+      ORDER BY revenue DESC;
+  - question: Discount amount and revenue by special offer
+    sql: |
+      SELECT so.Description AS offer, so.Type, so.Category, COUNT(*) AS order_lines,
+             ROUND(SUM(d.OrderQty * d.UnitPrice * d.UnitPriceDiscount), 2) AS discount_amount,
+             ROUND(SUM(d.LineTotal), 2) AS revenue
+      FROM Sales__SalesOrderDetail d
+      JOIN Sales__SpecialOffer so ON so.SpecialOfferID = d.SpecialOfferID
+      GROUP BY so.SpecialOfferID, so.Description, so.Type, so.Category
+      ORDER BY discount_amount DESC;
+  - question: Purchase reasons given by customers
+    sql: |
+      SELECT sr.Name AS reason, sr.ReasonType, COUNT(*) AS orders
+      FROM Sales__SalesOrderHeaderSalesReason x
+      JOIN Sales__SalesReason sr ON sr.SalesReasonID = x.SalesReasonID
+      GROUP BY sr.Name, sr.ReasonType
+      ORDER BY orders DESC;
+  - question: Current number of employees per department
+    sql: |
+      SELECT d.GroupName, d.Name AS department, COUNT(*) AS employees
+      FROM HumanResources__EmployeeDepartmentHistory edh
+      JOIN HumanResources__Department d ON d.DepartmentID = edh.DepartmentID
+      WHERE edh.EndDate IS NULL
+      GROUP BY d.GroupName, d.Name
+      ORDER BY employees DESC;
+  - question: Current pay rate of each employee with job title and department
+    sql: |
+      WITH latest_pay AS (
+        SELECT BusinessEntityID, Rate,
+               ROW_NUMBER() OVER (PARTITION BY BusinessEntityID ORDER BY RateChangeDate DESC) AS rn
+        FROM HumanResources__EmployeePayHistory
+      )
+      SELECT p.FirstName || ' ' || p.LastName AS employee, e.JobTitle, d.Name AS department, lp.Rate AS hourly_rate
+      FROM HumanResources__Employee e
+      JOIN Person__Person p ON p.BusinessEntityID = e.BusinessEntityID
+      JOIN latest_pay lp ON lp.BusinessEntityID = e.BusinessEntityID AND lp.rn = 1
+      JOIN HumanResources__EmployeeDepartmentHistory edh ON edh.BusinessEntityID = e.BusinessEntityID AND edh.EndDate IS NULL
+      JOIN HumanResources__Department d ON d.DepartmentID = edh.DepartmentID
+      ORDER BY lp.Rate DESC;
+  - question: Products at or below their reorder point (inventory across all locations)
+    sql: |
+      SELECT p.ProductNumber, p.Name, p.ReorderPoint, p.SafetyStockLevel, COALESCE(SUM(i.Quantity), 0) AS on_hand
+      FROM Production__Product p
+      LEFT JOIN Production__ProductInventory i ON i.ProductID = p.ProductID
+      WHERE p.SellEndDate IS NULL AND p.DiscontinuedDate IS NULL
+      GROUP BY p.ProductID, p.ProductNumber, p.Name, p.ReorderPoint, p.SafetyStockLevel
+      HAVING COALESCE(SUM(i.Quantity), 0) <= p.ReorderPoint
+      ORDER BY on_hand;
+  - question: Top 10 vendors by purchase spend
+    sql: |
+      SELECT v.Name AS vendor, COUNT(*) AS purchase_orders, ROUND(SUM(poh.SubTotal), 2) AS spend
+      FROM Purchasing__PurchaseOrderHeader poh
+      JOIN Purchasing__Vendor v ON v.BusinessEntityID = poh.VendorID
+      WHERE poh.Status <> 3
+      GROUP BY v.BusinessEntityID, v.Name
+      ORDER BY spend DESC
+      LIMIT 10;
+  - question: Scrap quantity and scrap rate by scrap reason
+    sql: |
+      SELECT sr.Name AS scrap_reason, SUM(w.ScrappedQty) AS scrapped_units,
+             ROUND(100.0 * SUM(w.ScrappedQty) / SUM(w.OrderQty), 2) AS scrap_pct_of_ordered
+      FROM Production__WorkOrder w
+      JOIN Production__ScrapReason sr ON sr.ScrapReasonID = w.ScrapReasonID
+      GROUP BY sr.Name
+      ORDER BY scrapped_units DESC;
+  - question: Full inventory transaction history of one product (current + archive)
+    sql: |
+      SELECT t.TransactionDate, t.TransactionType, t.Quantity, t.ActualCost, t.ReferenceOrderID
+      FROM (
+        SELECT ProductID, TransactionDate, TransactionType, Quantity, ActualCost, ReferenceOrderID
+        FROM Production__TransactionHistory
+        UNION ALL
+        SELECT ProductID, TransactionDate, TransactionType, Quantity, ActualCost, ReferenceOrderID
+        FROM Production__TransactionHistoryArchive
+      ) t
+      JOIN Production__Product p ON p.ProductID = t.ProductID
+      WHERE p.ProductNumber = 'BK-M68B-42'
+      ORDER BY t.TransactionDate;

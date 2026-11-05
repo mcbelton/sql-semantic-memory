@@ -1,0 +1,51 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "verify: all gates (evidence in build/evidence)",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": ["scripts/verify.py"],
+      "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "verify: fix lint + format, then all gates",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": ["scripts/verify.py", "--fix"],
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "test: pytest",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": ["-m", "pytest", "-q"],
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "eval: retrieval with the KB's embedder (fastembed)",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": ["-m", "evals.run_retrieval", "--embedder", "kb", "--ablate-kg"],
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "engines: start portable PostgreSQL, MariaDB, LocalDB (Windows)",
+      "type": "shell",
+      "command": "./scripts/engines.ps1 start",
+      "options": { "shell": { "executable": "pwsh", "args": ["-NoProfile", "-Command"] } },
+      "problemMatcher": []
+    },
+    {
+      "label": "engines: stop",
+      "type": "shell",
+      "command": "./scripts/engines.ps1 stop",
+      "options": { "shell": { "executable": "pwsh", "args": ["-NoProfile", "-Command"] } },
+      "problemMatcher": []
+    }
+  ]
+}

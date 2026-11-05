@@ -1,0 +1,13 @@
+ECharts GL 2.1.0
+Copyright (c) 2017, Baidu Inc.
+Licensed under the BSD 3-Clause License; see echarts-gl.LICENSE.
+Upstream: https://github.com/ecomfe/echarts-gl/tree/2.1.0
+
+The prebuilt distribution includes ClayGL and ZRender.
+Their upstream license texts are included as claygl.LICENSE and zrender.LICENSE.
+This attribution inventory is supplied by sqlmem, not an upstream NOTICE file.
+
+Modified by sqlmem: the compositor's fixed dimension-expression compiler uses
+an exhaustive arithmetic switch instead of dynamic JavaScript compilation.
+The exact upstream hash, patched hash and reproducible build script are recorded
+in manifest.json. No other upstream behavior is intentionally changed.
