@@ -1,19 +1,21 @@
 # Status and handoff
 
 Living document: **read it at the start of a session, update it before the session ends** (AGENTS.md rule 10).
-Last updated: 2026-11-05 (UTC), for public MIT publication under `mcbelton` on GitHub.com.
+Last updated: 2026-11-05 (UTC), after public MIT publication under `mcbelton` on GitHub.com.
 
 ## Where things stand
 
-- Publication target: [mcbelton/sql-semantic-memory](https://github.com/mcbelton/sql-semantic-memory), to be
-  public under [MIT](../LICENSE). `origin` is `https://github.com/mcbelton/sql-semantic-memory.git`.
-  The recreated repository starts from one scrubbed root commit; older commit IDs in records are local provenance.
-  Clean-install verification passes after explicitly declaring the existing HTTPX transport in the `llm` extra:
+- **Public**: [mcbelton/sql-semantic-memory](https://github.com/mcbelton/sql-semantic-memory), licensed under
+  [MIT](../LICENSE); GitHub detects `MIT`, and private vulnerability reporting is enabled.
+  `origin` is `https://github.com/mcbelton/sql-semantic-memory.git`. The recreated repository starts from scrubbed
+  root commit `06577ce`; older commit IDs in records are local provenance.
+  Local clean-install verification passes after explicitly declaring the existing HTTPX transport in the `llm` extra:
   all seven gates PASS, 349 tests passed/1 skipped, 88% coverage, 51/51 requirements, BM25 24/24;
-  SQLite and DuckDB passed. PostgreSQL, MariaDB and SQL Server were not run on this machine.
-  The previously failing cancellation test passed in this run; no cancellation implementation was changed.
-  The first publication scope was approved; see the review record for the public-release recheck verdict.
-  See the [publication evidence](evidence/2026-11-05-github-publication.md) for commands, scope and limitations.
+  SQLite and DuckDB passed locally.
+  The [first public CI run](https://github.com/mcbelton/sql-semantic-memory/actions/runs/41962266224) failed:
+  quality, Windows/3.13, Ubuntu/3.11-3.12 and all three external engines passed; Ubuntu/3.10 and macOS failed.
+  Independent review approved the publication scope. See the
+  [publication evidence](evidence/2026-11-05-github-publication.md) for commands, results and limitations.
 - Reviewed the uncommitted VS Code migration of six prompts to skills:
   [changes requested](reviews/2026-11-03-prompt-to-skill-migration.md). Static checks found six valid headers
   and unchanged bodies, but all nine relative references are broken and all six custom-agent selections
@@ -68,16 +70,20 @@ Last updated: 2026-11-05 (UTC), for public MIT publication under `mcbelton` on G
 
 ## Next steps (in order)
 
-1. **Verify public publication and the first GitHub.com CI run.**
-   Confirm public visibility and `gh api repos/mcbelton/sql-semantic-memory/private-vulnerability-reporting`
-   returns `enabled: true`, so [SECURITY.md](../SECURITY.md) links work.
-   The local run used Windows/Python 3.14; the configured Python 3.10-3.13 matrix and Docker engine job
-   (`compose.yaml`, SQL Server 2022, ODBC Driver 18) remain unverified here.
+1. **Fix the first public CI failures test-first.**
+   [Run 41962266224](https://github.com/mcbelton/sql-semantic-memory/actions/runs/41962266224) failed on:
+   - Ubuntu/Python 3.10: `tests/test_charts.py::test_fractional_datetime_order_is_chronological`
+     (`sqlmem/charts.py:249` rejects an ISO datetime) and
+     `tests/test_memory_lifecycle.py::test_projection_failure_commits_and_next_recall_repairs`
+     (`store_failed: private`, `sqlmem/memory_lifecycle.py:193`);
+   - macOS/Python 3.13: `tests/test_chart_canvas.py::test_chart_canvas`, where the Node viewer request-cap test
+     raised `ECONNRESET`.
+   Reproduce on the matching runtime, preserve REQ-AMEM-01/09 and REQ-CHART-01/08, then require green CI.
    Preserve the cancellation requirement if the earlier intermittent failure recurs;
    the [review](reviews/2026-11-03-duckdb-azure-documentation.md) documents the previous failing run.
 
    ```powershell
-   gh run list --repo mcbelton/sql-semantic-memory --workflow ci.yml
+   gh run view 41962266224 --repo mcbelton/sql-semantic-memory --log-failed
    ```
 
 2. **Repair the prompt-to-skill migration before treating it as approved.**

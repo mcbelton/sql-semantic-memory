@@ -3,10 +3,10 @@
 | | |
 |---|---|
 | Date | 2026-11-05 (UTC) |
-| Commit | Uncommitted scrubbed tree for the new orphan root commit; it replaces a discarded private initial commit |
+| Commit | Evidence captured before root commit `06577ce751f569c53d3e3981ca8e1c977fb07b57`; outcomes appended afterward |
 | Requirements | REQ-AMEM-03, QA-TYPES, QA-TESTS |
 | Review | [Publication review](../reviews/2026-11-05-github-publication.md) |
-| CI run | Not run at evidence capture; first push triggers the configured workflow |
+| CI run | [41962266224](https://github.com/mcbelton/sql-semantic-memory/actions/runs/41962266224): failure (2 of 7 jobs) |
 
 ## Change
 
@@ -101,6 +101,29 @@ Rows copied from `build/evidence/traceability.md`:
 3. Change visibility to public, enable private vulnerability reporting, then verify both through the GitHub API.
 4. Record those outcomes and the first CI run in a follow-up handoff commit.
 
+### Post-publication outcomes
+
+- Root commit `06577ce751f569c53d3e3981ca8e1c977fb07b57` passed staged-tree and commit-metadata scans for the
+  previous-hosting domain, previous account name and local session identifiers; `git rev-list --count main` was `1`.
+- `git push -u origin refs/heads/main:refs/heads/main` pushed only `main`; `git ls-remote origin` returned exactly
+  `HEAD` and `refs/heads/main` at the root commit.
+- `gh repo edit ... --visibility public --accept-visibility-change-consequences` succeeded. `gh repo view`
+  returned `visibility: PUBLIC`; the commits API returned `1`; `gh api .../license` returned `LICENSE`, `MIT`.
+- `gh api --method PUT .../private-vulnerability-reporting` succeeded, then the GET endpoint returned `enabled: true`.
+- First public CI run [41962266224](https://github.com/mcbelton/sql-semantic-memory/actions/runs/41962266224):
+  conclusion `failure`. Quality gates, Windows/Python 3.13, Ubuntu/Python 3.11, Ubuntu/Python 3.12 and the
+  PostgreSQL 18/MariaDB 11.4/SQL Server 2022 cross-engine job passed.
+- Ubuntu/Python 3.10: `[tests] FAIL 2 failed, 347 passed, 1 skipped`; trace `48/51`, missing
+  REQ-AMEM-01, REQ-AMEM-09 and REQ-CHART-01. Failing nodes:
+  `tests/test_charts.py::test_fractional_datetime_order_is_chronological` (`sqlmem/charts.py:249`, ISO datetime
+  rejection) and `tests/test_memory_lifecycle.py::test_projection_failure_commits_and_next_recall_repairs`
+  (`store_failed: private` from `sqlmem/memory_lifecycle.py:193`).
+- macOS/Python 3.13: `[tests] FAIL 1 failed, 348 passed, 1 skipped`; trace `50/51`, missing REQ-CHART-08.
+  `tests/test_chart_canvas.py::test_chart_canvas` failed because Node test
+  `viewer caps active requests at eight and closes open sockets` raised `ECONNRESET`.
+- These failures are in inherited behavior, not the dependency, license or publication edits. They were not fixed in
+  this publication scope.
+
 ### Independent review
 
 The [reviewer record](../reviews/2026-11-05-github-publication.md) approved the first dependency/publication
@@ -110,7 +133,7 @@ was revised to address them; the review record holds the final verdict.
 
 ## Gaps and risks
 
-- CI had not run when this evidence was captured; local verification does not certify the configured OS/Python matrix.
+- Hosted CI ran the configured matrix: Python 3.10 and macOS failures remain open (see post-publication outcomes).
 - PostgreSQL, MariaDB and SQL Server were not started; only SQLite and DuckDB ran. SQL/dialect logic was unchanged.
 - The SQL Server integration test was skipped; the run reported 33 resource warnings. No gate was lowered.
 - Fastembed evaluation was not run; retrieval behavior was not changed. The required BM25 gate passed.
